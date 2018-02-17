@@ -21,6 +21,6 @@ print ("""Content-type: text/html;charset=utf-8\r\n\r\n
                 <p>In the EMAIL text box: {1} </p>
             </body>
         </html>
-        """.format(name, email)
+        """.format(name, email))
 
 

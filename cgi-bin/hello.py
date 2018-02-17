@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
+# -*- coding: UTF-8 -*-# enable debugging
 
-print ('Content-type:text/html\r\n\r\n')
+import cgitb
+cgitb.enable()
+
+print ('Content-Type: text/html;charset=utf-8\r\n\r\n')
 print ('<html>')
 print ('<head>')
 print ('<title>Hello, World</title>')

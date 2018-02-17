@@ -7,8 +7,8 @@ cgitb.enable()
 
 form_data = cgi.FieldStorage()
 
-name = formData.getvalue('name')
-email = formData.getvalue('email')
+name = form_data.getvalue('name')
+email = form_data.getvalue('email')
 
 print ("""Content-type: text/html;charset=utf-8\r\n\r\n
         <!DOCTYPE html>

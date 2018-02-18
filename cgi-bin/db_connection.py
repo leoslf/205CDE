@@ -4,7 +4,7 @@
 import pymysql
 import sys
 sys.path.insert(0, "../../../http_credential")
-import database_credential
+from database_credential import *
 from logging import *
 
 
@@ -13,10 +13,12 @@ def db_conn():
     conn = None
 
     try:
-        print (*database_credential.db)
-        conn = pymysql.connect(*database_credential.db)
+        for key, value in db.items():
+            print ((key, value))
+        print (db + "\r\n")
+        conn = pymysql.connect(*db)
     except Exception as e:
-        print ("cannot get DB connection")
+        print ("cannot get DB connection\r\n")
 
     return conn
 

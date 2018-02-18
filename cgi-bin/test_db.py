@@ -6,11 +6,12 @@ from db_connection import db_conn
 
 cgitb.enable()
 
+conn = db_conn()
+cur = conn.cursor()
 header()
 print ("<!DOCTYPE html>")
 print ("<html>")
 print ("<body>")
-print (db_conn())
 print ("</body>")
 print ("</html>")
 

@@ -1,14 +1,52 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <!-- Mobile First -->
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="style.css" />
+
         <title>Index</title>
-        <link rel="stylesheet" type="text/css" href="style.css" />
     </head>
+    <!-- <body class="color-block peach-gradient"> -->
     <body>
-        <form method="post" action="cgi-bin/login.py">
-            Username: <input type="text" name="username" required="required" /><br />
-            Password: <input type="password" name="password" required="required" /><br />
-            <input type="submit" value="Login" />
-        </form>
+        <!-- <div class="container"> -->
+        <div class="container" style="background-color: white">
+            <header>
+                <div class="row">
+                    <h1>205CDE - Login</h1>
+                </div>
+            </header>
+            <main>
+                <form method="post" action="cgi-bin/login.py">
+                    <div class="row">
+                        <div class="col">
+                            Username: 
+                        </div>
+                        <div class="col">
+                            <input type="text" name="username" required="required" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            Password: 
+                        </div>
+                        <div class="col">
+                            <input type="password" name="password" required="required" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <input type="submit" value="Login" />
+                    </div>
+                </form>
+            </main>
+            <footer id="footer" class="footer">
+                footer
+            </footer>
+        </div>
     </body>
 </html>

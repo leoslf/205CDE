@@ -13,9 +13,10 @@ def db_conn():
     conn = None
 
     try:
+        print (*database_credential.db)
         conn = pymysql.connect(*database_credential.db)
     except Exception as e:
-        error("cannot get DB connection")
+        print ("cannot get DB connection")
 
     return conn
 

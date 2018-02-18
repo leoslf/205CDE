@@ -23,11 +23,35 @@ def db_conn():
     try:
         conn = pymysql.connect(**database_credential.db, cursorclass=OrderedDictCursor)
     except Exception as e:
-        print ("Exception:", e, "<br />")
+        print ("Exception:" + str(e) + "<br />")
         print ("cannot get DB connection<br />")
 
     return conn
 
-if __name__ == "__main__":
-    header()
-    print (database_credential.db.items())
+#if __name__ == "__main__":
+#    header()
+#    print (database_credential.db.items())
+
+def query(table,
+          column="*",
+          condition="",
+          join=""):
+    conn = db_conn()
+    assert(conn is not None)
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT %s FROM %s" % (column, table)
+             + ((" WHERE " + condition) if condition != "" else "")
+             + ((" INNER JOIN " + join) if join != "" else ""))
+
+        result = {"description" : cursor.description, "rows" : cursor.fetchall()}
+        return result
+    except Exception as e:
+        print ("Exception: " + str(e) + "<br />")
+    finally:
+        cursor.close()
+        conn.close()
+
+    return None
+
+

@@ -13,15 +13,12 @@ from pymysql.cursors import DictCursorMixin, Cursor
 class OrderedDictCursor(DictCursorMixin, Cursor):
     dict_type = OrderedDict
 
-
-
-
 def db_conn():
     """get database connection"""
     conn = None
 
     try:
-        conn = pymysql.connect(**database_credential.db, cursorclass=OrderedDictCursor)
+        conn = pymysql.connect(cursorclass=OrderedDictCursor, **database_credential.db)
     except Exception as e:
         print ("Exception:" + str(e) + "<br />")
         print ("cannot get DB connection<br />")
@@ -36,22 +33,103 @@ def query(table,
           column="*",
           condition="",
           join=""):
+
+    sql = "SELECT %s FROM %s" % (column, table) \
+            + ((" WHERE " + condition) if condition != "" else "") \
+            + ((" INNER JOIN " + join) if join != "" else "")
+    #debug(sql)
+
     conn = db_conn()
     assert(conn is not None)
-    try:
-        cursor = conn.cursor()
-        cursor.execute("SELECT %s FROM %s" % (column, table)
-             + ((" WHERE " + condition) if condition != "" else "")
-             + ((" INNER JOIN " + join) if join != "" else ""))
 
-        result = {"description" : cursor.description, "rows" : cursor.fetchall()}
-        return result
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute(sql)
+
+            result = {"description" : cursor.description, "rows" : cursor.fetchall()}
+            return result
     except Exception as e:
         print ("Exception: " + str(e) + "<br />")
     finally:
-        cursor.close()
         conn.close()
 
     return None
 
+def insert(table,
+           column="",
+           values="",
+           errmsg=None):
 
+    columns = (("(" + columns + ")") if columns != "" else "")
+    sql = ("INSERT INTO " + table + " " + columns \
+            + " VALUE (" + value + ")")
+    #debug(sql)
+
+    conn = db_conn()
+    assert(conn is not None)
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute(sql)
+            conn.commit()
+            return cursor.lastrowid
+    except Exception as e:
+        msg = "MYSQLError: errno %r, %r" % (e.args[0], e)
+        if errmsg is not None:
+            errmsg.append(msg)
+        # error(msg)
+    finally:
+        conn.close()
+
+    return -1
+
+def update(table,
+           column_and_value="",
+           condition="",
+           errmsg=None):
+
+    sql = ("UPDATE " + table + " SET " + column_and_value + ((" WHERE " + condition) if condition != "" else ""))
+    #debug(sql)
+    
+    conn = db_conn()
+    assert(conn is not None)
+
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute(sql)
+            conn.commit()
+            return cursor.rowcount
+    except Exception as e:
+        msg = "MYSQLError: errno %r, %r" % (e.args[0], e)
+        if errmsg is not None:
+            errmsg.append(msg)
+        # error(msg)
+    finally:
+        conn.close()
+
+    return -1
+
+def delete(table,
+           condition="",
+           errmsg=None):
+    
+    sql = ("DELETE FROM " + table \
+            + ((" WHERE " + condition) if condition != "" else ""))
+    #debug(sql)
+    
+    conn = db_conn()
+    assert(conn is not None)
+
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute(sql)
+            conn.commit()
+            return cursor.rowcount
+    except Exception as e:
+        msg = "MYSQLError: errno %r, %r" % (e.args[0], e)
+        if errmsg is not None:
+            errmsg.append(msg)
+        # error(msg)
+    finally:
+        conn.close()
+
+    return -1

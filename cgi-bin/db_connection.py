@@ -5,7 +5,7 @@ import pymysql
 import sys
 sys.path.insert(0, "../../../http_credential")
 import database_credential
-import logging
+from logging import *
 
 
 def db_conn():

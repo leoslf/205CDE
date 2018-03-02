@@ -1,28 +1,38 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<!-- Error Message -->
 <script src="login.js"></script>
+
+<!-- Login Page -->
 <div class="container bg-white">
+    <!-- Login Panel -->
     <div id="login_panel">
         <div class="panel panel-default">
+            <!-- Panel Heading -->
             <div class="panel-heading">
                 <div class="panel-title">Login</div>
             </div>
+            <!-- Panel Body -->
             <div class="panel-body">
+                <!-- Error Message Line -->
                 <span id="errmsg"></span><br />
                 <form class="form-horizontal" method="post" action="login">
+                    <!-- Username Line -->
                     <div class="input-group">
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-user"></span>
                         </span>
                         <input type="text" class="form-control" name="username" required="required" placeholder="Username"/>
                     </div>
+                    <!-- Password Line -->
                     <div class="input-group">
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-lock"></span>
                         </span>
                         <input type="password" class="form-control" name="password" required="required" placeholder="Password"/>
                     </div>
+                    <!-- Submit Button -->
                     <button type="submit" class="btn btn-success">Submit</button>
                 </form>
             </div>

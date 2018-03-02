@@ -11,7 +11,6 @@ def rootpath(path=""):
     return os.path.dirname(os.path.abspath(__file__)) + "/" + path
 
 # instantiate a Flask object
-#app = Flask(__name__, template_folder=rootpath('templates'), static_url_path="/app/static")
 app = Flask(__name__, template_folder=rootpath('templates'))
 app.config.from_object(DevelopmentConfig)
 app.secret_key = 'KEY'
@@ -48,17 +47,17 @@ def login():
         # login form submitted
         result = None
         try:
-            result = query("staff", "CONCAT(firstname, ' ', lastname) AS name", "username='%s' AND password='%s'" % (request.form['username'], request.form['password']))
+            results = query("staff", "CONCAT(firstname, ' ', lastname) AS name", "username='%s' AND password='%s'" % (request.form['username'], request.form['password']))
         except Exception as e:
             return "Exception: " + str(e)
 
         # login successful
-        if len(result["rows"]) == 1: 
+        if len(results) == 1: 
             session['user'] = request.form['username']
-            session['displayed_username'] = result["rows"][0]['name']
+            session['displayed_username'] = results[0]['name']
             return redirect(request.referrer)
-        print (result)
-        if len(result["rows"]) > 1:
+        print (results)
+        if len(results) > 1:
             errmsg = "Login Error, returned number of rows > 1"
         errmsg = "Invalid username or password"
         resp = make_response(render_template('login.html'))

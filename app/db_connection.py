@@ -2,13 +2,11 @@
 # -*- coding: UTF-8 -*-# enable debugging
 
 import sys
-sys.path.insert(0, "../../../http_credential")
+sys.path.insert(0, "../../http_credential")
 import database_credential
-from page_helper import *
 from logging import *
 from collections import OrderedDict
 import pymysql
-from pymysql.cursors import DictCursorMixin, Cursor
 
 def db_conn():
     """get database connection"""

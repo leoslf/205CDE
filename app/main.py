@@ -28,14 +28,6 @@ def root():
 def send_static(filename):
     return app.send_static_file(filename)
 
-@app.route('/css/<path>')
-def send_css(path):
-    return send_from_directory('css', path)
-
-@app.route('/js/<path>')
-def send_js(path):
-    return send_from_directory('js', path)
-
 @app.route("/login", methods = ['POST', 'GET'])
 def login():
     content = ""

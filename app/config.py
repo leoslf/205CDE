@@ -1,13 +1,13 @@
 #!/usr/bin/env python
-import sys
-sys.path.insert(0, "../../http_credential")
-from database_credential import db
+#import sys
+#sys.path.insert(0, "../../http_credential")
+#from database_credential import db
 
 class Config(object):
     name = "205CDE_Project"
     DEBUG = False
     TESTING = False
-    DATABASE_URI = 'mysql://%s@%s/%s' % (db['user'], db['host'], db['db'])
+    #DATABASE_URI = 'mysql://%s@%s/%s' % (db['user'], db['host'], db['db'])
 
 class ProductionConfig(Config):
     pass

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<script src="login.js"></script>
+<div class="container bg-white">
+    <div id="login_panel">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">Login</div>
+            </div>
+            <div class="panel-body">
+                <span id="errmsg"></span><br />
+                <form class="form-horizontal" method="post" action="login">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-user"></span>
+                        </span>
+                        <input type="text" class="form-control" name="username" required="required" placeholder="Username"/>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-lock"></span>
+                        </span>
+                        <input type="password" class="form-control" name="password" required="required" placeholder="Password"/>
+                    </div>
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

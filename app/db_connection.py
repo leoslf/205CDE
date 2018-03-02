@@ -43,7 +43,8 @@ def query(table,
         with conn.cursor() as cursor:
             cursor.execute(sql)
 
-            result = {"description" : cursor.description, "rows" : cursor.fetchall()}
+            #result = {"description" : cursor.description, "rows" : cursor.fetchall()}
+            result = cursor.fetchall()
             return result
     except Exception as e:
         print ("Exception: " + str(e) + "<br />")

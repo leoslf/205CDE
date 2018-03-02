@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% include 'cms_navbar.html' %}
+    <div class="container-fluid">
+        <div class="clearfix row" id="content">
+            <div id="main" class="col-md-12 clearfix" role="main">
+                {% block article %}
+
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

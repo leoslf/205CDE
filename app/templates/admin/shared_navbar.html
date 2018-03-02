@@ -1,0 +1,22 @@
+{% extends 'admin_base.html' %}
+
+{% block article %}
+    <table class="table-striped">
+        <thead>
+            <tr>
+                {% for col_name in list(zip(*result['description']))[0] %}
+                    <th>{{ col_name }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in result['rows'] %}
+                <tr>
+                    {% for col in row %}
+                        <td>{{ row[col] }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

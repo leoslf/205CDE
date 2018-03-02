@@ -15,18 +15,50 @@ app = Flask(__name__, template_folder=rootpath("templates"))
 app.config.from_object(DevelopmentConfig)
 app.secret_key = "KEY"
 
+def logged_in():
+    return all(x in session for x in ("username", "displayed_username"))
+
+def authentication():
+    if logged_in():
+        try:
+            # 2 == manager, 3 == admin
+            results = query("staff", condition="username = '%s' AND (role+0) >= 2" % session["username"])
+            print (results)
+            if len(results) == 1:
+                # successful
+                return True
+        except Exception as e:
+            app.logger.error("authentication Exception: in query, username: %s : " % session["username"] + str(e))
+    
+    return False
+
+def errmsg(msg, page="error.html"):
+    resp = make_response(render_template(str(page)))
+    resp.set_cookie("errmsg", str(msg))
+    return resp
+
+
+
 @app.before_request
 def before_request():
-    g.nav = query("navigation")
+    g.nav = query("navigation", filter=dict(bar="shared"))
+    g.cms_nav = query("navigation", filter=dict(bar="cms"))
 
 # matching route and handler
 @app.route("/")
 def index():
     return render_template("index.html")
 
-@app.route("")
+# Content Management System (CMS)
+@app.route("/admin")
 def admin():
-    return render_template("admin.html")
+    if logged_in() == False:
+        return errmsg("Please login first")
+    if authentication():
+        return render_template("admin.html")
+    return errmsg("You do not have permission to access this page")
+
+
 
 @app.route("/<filename>", methods = ["GET", "POST"])
 def send_static(filename):
@@ -36,36 +68,41 @@ def send_static(filename):
 def login():
     content = ""
     # Login Already 
-    if "user" in session and "displayed_username" in session:
-        return redirect(url_for("root"))
+    if logged_in():
+        return redirect(url_for("index"))
 
     if request.method == "POST":
         # login form submitted
         result = None
         try:
-            results = query("staff", "CONCAT(firstname, " ", lastname) AS name", "username="%s" AND password="%s"" % (request.form["username"], request.form["password"]))
-        except Exception as e:
-            return "Exception: " + str(e)
+            results = query("staff", "CONCAT(firstname, ' ', lastname) AS name", "username='%s' AND password='%s'" % (request.form["username"], request.form["password"]))
 
-        # login successful
-        if len(results) == 1: 
-            session["user"] = request.form["username"]
-            session["displayed_username"] = results[0]["name"]
-            return redirect(request.referrer)
-        print (results)
-        if len(results) > 1:
-            errmsg = "Login Error, returned number of rows > 1"
-        errmsg = "Invalid username or password"
-        resp = make_response(render_template("login.html"))
-        resp.set_cookie("errmsg", errmsg)
-        return resp
+            # login successful
+            if len(results) == 1: 
+                session["username"] = request.form["username"]
+                session["displayed_username"] = results[0]["name"]
+                return redirect(request.referrer)
+
+            if len(results) == 0:
+                msg = "Invalid username or password"
+            else:
+                msg = "Login Error (DB), returned number of rows > 1"
+            msg += str(results)
+
+        except Exception as e:
+            app.logger.error("Exception in login: " + str(e))
+            msg = "Exception occured during login query: " + str(e)
+
+        return errmsg(msg, "login.html")
+
     # before login
     return render_template("login.html")
 
 @app.route("/logout")
 def logout():
-    session.pop("user", None)
-    session.pop("displayed_username", None)
+    # remove cookie variable
+    for x in ("username", "displayed_username"):
+        session.pop(x, None)
     return redirect(request.referrer)
 
 # prevent execution when this module is imported by others

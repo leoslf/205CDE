@@ -27,7 +27,9 @@ def db_conn():
 def query(table,
           column="*",
           condition="",
-          join=""):
+          join="",
+          desc=False,
+          filter=None):
 
     sql = "SELECT %s FROM %s" % (column, table) \
             + ((" WHERE " + condition) if condition != "" else "") \
@@ -42,8 +44,13 @@ def query(table,
             cursor.execute(sql)
 
             #result = {"description" : cursor.description, "rows" : cursor.fetchall()}
-            result = cursor.fetchall()
-            return result
+            rows = cursor.fetchall()
+            if filter is not None:
+                rows = [item for item in rows \
+                            if all(attrib not in item \
+                                    or item[attrib] == filter[attrib]
+                                for attrib in filter)]
+            return rows if desc == False else OrderedDict(rows=rows, description=cursor.descrption)
     except Exception as e:
         print ("Exception: " + str(e) + "<br />")
     finally:

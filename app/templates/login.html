@@ -1,9 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<!-- Error Message -->
-<script src="login.js"></script>
-
 <!-- Login Page -->
 <div class="container bg-white">
     <!-- Login Panel -->
@@ -15,9 +12,7 @@
             </div>
             <!-- Panel Body -->
             <div class="panel-body">
-                <!-- Error Message Line -->
-                <span id="errmsg"></span><br />
-
+                {% include 'errmsg.html' %}
                 <!-- Login Form -->
                 <form class="form-horizontal" method="post" action="login">
                     <!-- Username Line -->

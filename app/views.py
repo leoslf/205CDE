@@ -3,59 +3,30 @@
 import sys
 import os
 from flask import *
-from config import DevelopmentConfig
-from utils import *
-from blueprints.admin import admin
+from app import app as application
+from app.utils import *
 
-# instantiate a Flask object
-app = Flask(__name__, template_folder=rootpath("templates"))
-app.register_blueprint(admin, url_prefix="/admin")
-app.config.from_object(DevelopmentConfig)
-app.secret_key = "KEY"
-app.jinja_env.globals.update(zip=zip, list=list, query=query)
-
-
-@app.before_request
+@application.before_request
 def before_request():
     g.app_name = "205CDE"
     g.nav = query("navigation", filter=dict(bar="shared"))
     g.cms_nav = query("navigation", filter=dict(bar="cms"))
     g.authentication = authentication
-    g.query = query
 
 # matching route and handler
-@app.route("/")
+@application.route("/")
 def index():
     return render_template("index.html")
 
-# Content Management System (CMS)
-#@app.route("/admin/", defaults={"filename": "index.html"})
-#@app.route("/admin/<filename>")
-#def admin_dir(filename):
-#    if logged_in() == False:
-#        return errmsg("Please login first")
-#    if authentication():
-#        return render_template(filename)
-#    return errmsg("You do not have permission to access this page")
-
-#@app.route("/admin")
-#def admin():
-#    if logged_in() == False:
-#        return errmsg("Please login first")
-#    if authentication():
-#        return render_template("admin.html")
-#    return errmsg("You do not have permission to access this page")
-   
-
-@app.route("/<filename>", methods = ["GET", "POST"])
+@application.route("/<filename>", methods = ["GET", "POST"])
 def send_static(filename):
-    return app.send_static_file(filename)
+    return application.send_static_file(filename)
 
-@app.route("/settings")
+@application.route("/settings")
 def settings():
     return render_template("settings.html")
 
-@app.route("/login", methods = ["POST", "GET"])
+@application.route("/login", methods = ["POST", "GET"])
 def login():
     content = ""
     # Login Already 
@@ -81,7 +52,7 @@ def login():
             msg += str(results)
 
         except Exception as e:
-            app.logger.error("Exception in login: " + str(e))
+            application.logger.error("Exception in login: " + str(e))
             msg = "Exception occured during login query: " + str(e)
 
         return errmsg(msg, "login.html")
@@ -89,14 +60,11 @@ def login():
     # before login
     return render_template("login.html")
 
-@app.route("/logout")
+@application.route("/logout")
 def logout():
     # remove cookie variable
     for x in ("username", "displayed_username"):
         session.pop(x, None)
     return redirect(request.referrer)
 
-# prevent execution when this module is imported by others
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
 

@@ -1,6 +1,6 @@
 from flask import *
 from jinja2 import TemplateNotFound
-from utils import *
+from app.utils import *
 
 admin = Blueprint("admin", __name__,
                   template_folder=rootpath("templates/admin"),

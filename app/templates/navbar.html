@@ -1,5 +1,5 @@
-<script src="navbar.js"></script>
-<script src="navbar_offset.js"></script>
+<script src="/navbar.js"></script>
+<script src="/navbar_offset.js"></script>
 
 <nav class="navbar navbar-default navbar-fixed-top" id="shared_navbar">
     <div class="container-fluid">
@@ -17,7 +17,7 @@
             <ul class="nav navbar-nav">
                 {% for item in g.nav %}
                 <li>
-                    <a href="{{ item['href'] }}">{{ item['caption'] }}</a>
+                    <a href="/{{ item['href'] }}">{{ item['caption'] }}</a>
                 </li>
                 {% endfor %}
             </ul>
@@ -28,16 +28,16 @@
                         <span class="glyphicon glyphicon-user"></span> {{ session['displayed_username'] }} <span class="caret"></span>
                     </a>
                         <ul class="dropdown-menu">
-                            <li><a href="#">Settings</a></li>
+                            <li><a href="/settings">Settings</a></li>
                             {% if g.authentication() %}
-                                <li><a href="admin/">Admin</a></li>
+                                <li><a href="/admin">Admin</a></li>
                             {% endif %}
                             <li role="separator" class="divider"></li>
-                            <li><a href="logout">Logout</a></li>
+                            <li><a href="/logout">Logout</a></li>
                         </ul>
                     </li>
                 {% else %}
-                    <li><a href="login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                    <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
                 {% endif %}
             </ul>
         </div> <!-- .navbar-collapse -->

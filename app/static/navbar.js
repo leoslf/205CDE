@@ -1,8 +1,8 @@
 function navbar_active() {
-    $("#shared_navbar ul li a").each(function(index, element) {
+    $("#shared_navbar > div > div > ul > li > a").each(function(index, element) {
         var href = $(element).attr("href");
-        console.log("href: " + href + " vs " + window.location.href);
-        if (href == window.location.href)
+        console.log("href: " + href + " vs " + window.location.pathname);
+        if (href == window.location.pathname)
             $(element).addClass("active");
     });
 }

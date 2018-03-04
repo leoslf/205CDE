@@ -4,38 +4,15 @@ import sys
 import os
 from flask import *
 from config import DevelopmentConfig
-from db_connection import *
-
-# helper functions
-def rootpath(path=""):
-    return os.path.dirname(os.path.abspath(__file__)) + "/" + path
+from utils import *
+from blueprints.admin import admin
 
 # instantiate a Flask object
 app = Flask(__name__, template_folder=rootpath("templates"))
+app.register_blueprint(admin, url_prefix="/admin")
 app.config.from_object(DevelopmentConfig)
 app.secret_key = "KEY"
 
-def logged_in():
-    return all(x in session for x in ("username", "displayed_username"))
-
-def authentication():
-    if logged_in():
-        try:
-            # 2 == manager, 3 == admin
-            results = query("staff", condition="username = '%s' AND (role+0) >= 2" % session["username"])
-            print (results)
-            if len(results) == 1:
-                # successful
-                return True
-        except Exception as e:
-            app.logger.error("authentication Exception: in query, username: %s : " % session["username"] + str(e))
-    
-    return False
-
-def errmsg(msg, page="error.html"):
-    resp = make_response(render_template(str(page)))
-    resp.set_cookie("errmsg", str(msg))
-    return resp
 
 @app.before_request
 def before_request():
@@ -51,19 +28,31 @@ def index():
     return render_template("index.html")
 
 # Content Management System (CMS)
-@app.route("/admin")
-def admin():
-    if logged_in() == False:
-        return errmsg("Please login first")
-    if authentication():
-        return render_template("admin.html")
-    return errmsg("You do not have permission to access this page")
+#@app.route("/admin/", defaults={"filename": "index.html"})
+#@app.route("/admin/<filename>")
+#def admin_dir(filename):
+#    if logged_in() == False:
+#        return errmsg("Please login first")
+#    if authentication():
+#        return render_template(filename)
+#    return errmsg("You do not have permission to access this page")
 
-
+#@app.route("/admin")
+#def admin():
+#    if logged_in() == False:
+#        return errmsg("Please login first")
+#    if authentication():
+#        return render_template("admin.html")
+#    return errmsg("You do not have permission to access this page")
+   
 
 @app.route("/<filename>", methods = ["GET", "POST"])
 def send_static(filename):
     return app.send_static_file(filename)
+
+@app.route("/settings")
+def settings():
+    return render_template("settings.html")
 
 @app.route("/login", methods = ["POST", "GET"])
 def login():

@@ -11,4 +11,5 @@ app.register_blueprint(admin, url_prefix="/admin")
 app.secret_key = "KEY"
 app.jinja_env.globals.update(zip=zip, list=list, query=query)
 
+# Circular import 
 from app import views, models

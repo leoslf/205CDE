@@ -1,22 +1,43 @@
 /* fix the bottom of navbar */
+/*
 .navbar {
     margin-bottom: 0;
 }
-
+*/
 #errmsg {
     color: red;
 }
+.sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+    background-color: white;
+    border-color: white;
+    float: left;
+}
 
-#cms_navbar {
-    width: 20%;
+.main {
+    position: relative;
+    width: 100%;
+    float: right;
 }
-.cms_navbar_nav {
-    float: none;
+
+@media (min-width: 767px) {
+    .sidebar {
+        overflow: auto;
+        position: fixed;
+        width: 15%;
+        height: 100%;
+    }
+    .main {
+        width: 80%;
+    }
 }
-#cms_navbar_brand {
-    float: none;
+
+.sidebar-brand {
+    display: block;
+    text-align: center;
 }
-.navbar-fixed-left {
-    position: fixed;
-    height: 100%;
-}
+
+

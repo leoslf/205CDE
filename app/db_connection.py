@@ -50,7 +50,7 @@ def query(table,
                             if all(attrib not in item \
                                     or item[attrib] == filter[attrib]
                                 for attrib in filter)]
-            return rows if desc == False else OrderedDict(rows=rows, description=cursor.descrption)
+            return rows if desc == False else OrderedDict([("rows", rows), ("description", cursor.description)])
     except Exception as e:
         print ("Exception: " + str(e) + "<br />")
     finally:

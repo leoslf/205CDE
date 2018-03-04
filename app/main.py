@@ -12,6 +12,7 @@ app = Flask(__name__, template_folder=rootpath("templates"))
 app.register_blueprint(admin, url_prefix="/admin")
 app.config.from_object(DevelopmentConfig)
 app.secret_key = "KEY"
+app.jinja_env.globals.update(zip=zip, list=list, query=query)
 
 
 @app.before_request

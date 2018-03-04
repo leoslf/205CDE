@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% include 'admin/navbar.html' %}
+    <!-- <div class="main" id="content"> -->
+        <div class="main pull-right" role="main">
+            <article>
+                <div class="container-fluid">
+                    {% block article %}
+
+                    {% endblock %}
+                </div>
+            </article>
+        </div>
+    <!-- </div> -->
+{% endblock %}

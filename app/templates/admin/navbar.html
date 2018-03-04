@@ -1,0 +1,27 @@
+<!-- <script src="/sidebar_offset.js"></script> -->
+
+<div class="container-fluid">
+    <nav class="navbar navbar-default sidebar" role="navigation" id="cms_navbar">
+        <!-- Sidebar Header -->
+        <div class="navbar-header">
+            <button type="button" class="pull-left navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse sidebar-collapse">
+            <ul class="nav nav-stacked">
+                <li> 
+                    <a class="" id="cms_navbar_brand" href="#">CMS</a>
+                </li>
+                {% for item in g.cms_nav %}
+                <li>
+                    <a href="{{ item['href'] }}">{{ item['caption'] }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </nav>
+</div>

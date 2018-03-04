@@ -1,22 +1,53 @@
-{% extends 'admin_base.html' %}
+{% extends 'admin/base.html' %}
+
+{% set result = query("navigation", desc=True) %}
+{% set columns = list(zip(*result['description']))[0] %}
 
 {% block article %}
-    <table class="table-striped">
-        <thead>
-            <tr>
-                {% for col_name in list(zip(*result['description']))[0] %}
-                    <th>{{ col_name }}</th>
+    <div class="row">
+        <header>
+            <div class="col-sm-12">
+                <h1>Shared Navbar</h1>
+            </div>
+        </header>
+    </div>
+    <div class="row">
+        {% if result is not none %}
+            <script>
+                {% for col_name in columns %}
+                    console.log({{ col_name }});
                 {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
-            {% for row in result['rows'] %}
-                <tr>
-                    {% for col in row %}
-                        <td>{{ row[col] }}</td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </script>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            {% for col_name in columns %}
+                                <th>{{ col_name }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in result['rows'] %}
+                            <tr>
+                                {% for col in row %}
+                                    <td>{{ row[col] }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <script>
+                set_cookie("errmsg", "result is None", 60);
+                console.log(get_cookie("errmsg"));
+            </script>
+            {% include 'errmsg.html' %}
+            <script>
+                document.write("result: " + "{{ result }}");
+                document.write("{{ columns }}");
+            </script>
+        {% endif %}
+    </div>
 {% endblock %}

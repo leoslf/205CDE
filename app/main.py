@@ -37,13 +37,13 @@ def errmsg(msg, page="error.html"):
     resp.set_cookie("errmsg", str(msg))
     return resp
 
-
-
 @app.before_request
 def before_request():
     g.app_name = "205CDE"
     g.nav = query("navigation", filter=dict(bar="shared"))
     g.cms_nav = query("navigation", filter=dict(bar="cms"))
+    g.authentication = authentication
+    g.query = query
 
 # matching route and handler
 @app.route("/")

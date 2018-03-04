@@ -27,6 +27,7 @@
     .sidebar {
         overflow: auto;
         position: fixed;
+        /* missing 5% */
         width: 15%;
         height: 100%;
     }
@@ -38,6 +39,11 @@
 .sidebar-brand {
     display: block;
     text-align: center;
+}
+
+.sidebar .divider {
+    background-color: rgba(0, 0, 0, .12);
+    height: 1px;
 }
 
 

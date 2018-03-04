@@ -1,5 +1,3 @@
-<!-- <script src="/sidebar_offset.js"></script> -->
-
 <div class="container-fluid">
     <nav class="navbar navbar-default sidebar" role="navigation" id="cms_navbar">
         <!-- Sidebar Header -->
@@ -13,9 +11,10 @@
         </div>
         <div class="collapse navbar-collapse sidebar-collapse">
             <ul class="nav nav-stacked">
-                <li> 
-                    <a class="" id="cms_navbar_brand" href="#">CMS</a>
+                <li class="text-center"> 
+                    <a href="."><strong>CMS</strong></a>
                 </li>
+                <li class="divider"></li>
                 {% for item in g.cms_nav %}
                 <li>
                     <a href="{{ item['href'] }}">{{ item['caption'] }}</a>

@@ -1,7 +1,7 @@
 import sys
 import os
 from flask import *
-from db_connection import *
+from app.db_connection import *
 
 # helper functions
 def rootpath(path=""):

@@ -3,6 +3,7 @@
 import sys
 import os
 from flask import *
+from jinja2 import TemplateNotFound
 from app import app as application
 from app.utils import *
 
@@ -14,13 +15,13 @@ def before_request():
     g.authentication = authentication
 
 # matching route and handler
-@application.route("/")
-def index():
-    return render_template("index.html")
-
-@application.route("/<filename>", methods = ["GET", "POST"])
-def send_static(filename):
-    return application.send_static_file(filename)
+@application.route("/", defaults={"filename": "index.html"})
+@application.route("/<path:filename>", methods = ["GET", "POST"])
+def display(filename):
+    try:
+        return render_template(filename)
+    except TemplateNotFound:
+        return application.send_static_file(filename)
 
 @application.route("/settings")
 def settings():
@@ -31,7 +32,7 @@ def login():
     content = ""
     # Login Already 
     if logged_in():
-        return redirect(url_for("index"))
+        return redirect("/")
 
     if request.method == "POST":
         # login form submitted
@@ -58,6 +59,7 @@ def login():
         return errmsg(msg, "login.html")
 
     # before login
+    # GET Request
     return render_template("login.html")
 
 @application.route("/logout")

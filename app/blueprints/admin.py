@@ -49,12 +49,24 @@ def update_table():
                     if rc < 0:
                         msg += "update failed, id: %s, delta_dict: %r" % (row_id, delta_dict) + "<br />"
                         msg += err_msg[0] + "<br />"
+                    else:
+                        updated_rows += rc
 
                 elif name.startswith("newrow-"):
                     msg += "insert: %s, %r" % (name, request.form[name]) + "<br />"
-                    # TODO
+                    delta_dict = json.loads(request.form[name])
+                    rc = insert(table_name,
+                                values = delta_dict,
+                                errmsg = err_msg)
+                    if rc < 0:
+                        msg += "update failed, delta_dict: %r" % delta_dict + "<br />"
+                        msg += err_msg[0] + "<br />"
+                    else:
+                        msg += "inserted row's id: %d" % rc
+                        inserted_rows += 1
 
-
+            msg += "updated_rows: %d" % updated_rows + "<br />"
+            msg += "inserted_rows: %d" % inserted_rows + "<br />"
 
         except Exception as e:
             # application.logger.error("Exception in login: " + str(e))

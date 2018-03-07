@@ -61,17 +61,33 @@ def query(table,
     return None
 
 def insert(table,
-           column="",
+           columns="",
            values="",
            errmsg=None):
 
-    columns = (("(" + columns + ")") if columns != "" else "")
-    sql = ("INSERT INTO " + table + " " + columns \
-            + " VALUE (" + value + ")")
+    if columns == "" and isinstance(values, dict):
+        columns = "(" + ", ".join(map(str, values.keys())) + ")"
+        values = ", ".join(["'%s'" % x for x in values.values()])
+
+    elif columns != "" and isinstance(values, str):
+        # comma delimited string
+        columns = "("+ columns +")"
+    elif isinstance(values, list):
+        values = ", ".join(["'%s'" % x for x in values])
+    else:
+        if errmsg is not None and errmsg is list:
+            errmsg.append("values provided is neither dictionary with columns nor string paired with columns nor list paired with columns")
+        return -1
+
+    sql = "INSERT INTO " + table + " " \
+            + columns \
+            + " VALUE ("+ values +")"
     #debug(sql)
+    print (sql)
 
     conn = db_conn()
     assert(conn is not None)
+
     try:
         with conn.cursor() as cursor:
             cursor.execute(sql)

@@ -1,48 +1,50 @@
+"use strict";
+
 /* jQuery Plugin */
 (function ($) {
     /* Attaching new method to jQuery */
     $.fn.extend({
         /* Plugin's name */
         editabletbl: function (options) {
-            "use strict";
 
             /* Iterate through the set of matched elements */
             return this.each(function () {
 
                 var default_options = function () {
                         var options = $.extend({}, {
-                                css_properties: ["padding", 
-                                                 "padding-top", "padding-bottom", "padding-left", "padding-right",
-                                                 "text-align", 
-                                                 "font", "font-size", "font-family", "font-weight",
-                                                 "border", 
-                                                 "border-top", "border-bottom", "border-left", "border-right"],
-                                editor: $("<input>")
-                            });
+                            /* CSS Properties for in-place editor */
+                            css_properties: ["padding", 
+                                             "padding-top", "padding-bottom", "padding-left", "padding-right",
+                                             "text-align", 
+                                             "font", "font-size", "font-family", "font-weight",
+                                             "border", 
+                                             "border-top", "border-bottom", "border-left", "border-right"],
+                            editor: $("<input>")
+                        });
                         options.editor = options.editor.clone();
                         return options;
                     };
 
-                var current_options = $.extend(default_options(), options),
-                    key = {
-                        left: 0x25, up: 0x26, right: 0x27, down: 0x28, enter: 0xd, esc: 0x1b, tab: 0x9,
-                    },
-                    table = $(this),
-                    active_elem,
+                /* Constants */
+                const table = $(this);
+                const current_options = $.extend(default_options(), options);
+                const key = { left: 0x25, up: 0x26, right: 0x27, down: 0x28, enter: 0xd, esc: 0x1b, tab: 0x9, };
+
+                var active_cell,
                     editor = current_options.editor
                                    .css("position", "absolute")
                                    .hide()
                                    .appendTo(table.parent()),
                     showEditor = function (select) {
-                        active_elem = table.find("td:focus");
-                        if (active_elem.length) {
-                            editor.val(active_elem.text())
+                        active_cell = table.find("td:focus");
+                        if (active_cell.length) {
+                            editor.val(active_cell.text())
                                 .removeClass("error")
                                 .show()
-                                .offset(active_elem.offset())
-                                .css(active_elem.css(current_options.css_properties))
-                                .width(active_elem.width())
-                                .height(active_elem.height())
+                                .offset(active_cell.offset())
+                                .css(active_cell.css(current_options.css_properties))
+                                .width(active_cell.width())
+                                .height(active_cell.height())
                                 .focus();
 
                             if (select)
@@ -54,17 +56,17 @@
                             event = $.Event("change"),
                             content_backup;
 
-                        if (active_elem.text() === text || editor.hasClass("error"))
+                        if (active_cell.text() === text || editor.hasClass("error"))
                             return true;
 
-                        content_backup = active_elem.html();
-                        active_elem.text(text).trigger(event, text);
+                        content_backup = active_cell.html();
+                        active_cell.text(text).trigger(event, text);
 
 
                         if (event.result === false)
-                            active_elem.html(content_backup);
+                            active_cell.html(content_backup);
                         else {
-                            active_elem.addClass("changed");
+                            active_cell.addClass("changed");
                        }
 
 
@@ -88,27 +90,26 @@
                     editor.hide();
                 }).keydown(function (event) {
                     switch (event.which) {
-
                         case key.enter:
                             setActiveText();
-                            active_elem.focus();
+                            active_cell.focus();
                             editor.hide();
                             event.preventDefault();
                             event.stopPropagation();
                             break;
                         case key.esc:
-                            editor.val(active_elem.text());
-                            active_elem.focus();
+                            editor.val(active_cell.text());
+                            active_cell.focus();
                             editor.hide();
                             event.preventDefault();
                             event.stopPropagation();
                             break;
                         case key.tab:
-                            active_elem.focus();
+                            active_cell.focus();
                             break;
                         default:
                             if (this.selectionEnd - this.selectionStart === this.value.length) {
-                                var move = movement(active_elem, event.which);
+                                var move = movement(active_cell, event.which);
                                 if (move.length > 0) {
                                     move.focus();
                                     event.preventDefault();
@@ -119,7 +120,7 @@
                 })
                 .on("input paste", function () {
                     var event = $.Event("validate");
-                    active_elem.trigger(event, editor.val());
+                    active_cell.trigger(event, editor.val());
                     if (event.result === false)
                         editor.addClass("error");
                     else 
@@ -152,9 +153,9 @@
 
                 $(window).on("resize", function () {
                     if (editor.is(":visible")) 
-                        editor.offset(active_elem.offset())
-                            .width(active_elem.width())
-                            .height(active_elem.height());
+                        editor.offset(active_cell.offset())
+                            .width(active_cell.width())
+                            .height(active_cell.height());
                 });
             });
         }
@@ -163,9 +164,8 @@
 
 
 $("#addrow_btn").on("click", function () {
-    "use strict";
-    var tr = $("<tr>");
-    tr.addClass("new-row");
+
+    var tr = $("<tr>").addClass("new-row");
 
     for (var i = 0; i < $("#table > thead > tr > th").length; ++i) {
         var td = $("<td>");
@@ -175,29 +175,17 @@ $("#addrow_btn").on("click", function () {
     $("#table > tbody").append(tr);
 });
 
-/* add <input type="hide" name="" value="" /> */
-/*
-const sep = "__sep__";
-const fieldsep = "__fieldsep__";
-var id = "id" + fieldsep + active_elem.siblings(":first").text() + sep
-    + "column" + fieldsep + elem.find("th").eq(active_elem.index()).text();
-if ($("#" + id).length == 0) {
-$("<input>").attr({
-    name: id,
-    type: "text",
-    class: "hidden"
-}).appendTo(elem.parent());
-}
-$("input[name=" + id + "]").attr("value", id + sep + "value" + fieldsep + active_elem.text());
-*/
 
-function colname(table, col) {
-    return table.find("th").eq($(col).index()).text();
-}
 
 $("#table").closest("form").submit(function (e) {
-    "use strict";
+
+    /* Helper Function */
+    function colname(table, col) {
+        return table.find("th").eq($(col).index()).text();
+    }
+
     // console.log("submitting");
+    
     /* loop through rows */
     var table = $("#table"),
         new_row_count = 0;
@@ -232,6 +220,7 @@ $("#table").closest("form").submit(function (e) {
     // prevent default
     //return false; // superfluous, but placed here for fallback
     
-    return true; // continue to submit form with update_table
+    // continue to submit form with update_table
+    return true; 
 });
     

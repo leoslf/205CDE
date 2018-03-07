@@ -34,28 +34,27 @@ def update_table():
             #     print ((key, request.form[key]))
             # msg = request.form["table_name"] + "<br />" +  "<br />".join(map(str, ["%s: %s" % (key, request.form[key]) for key in request.form]))
             table_name = request.form["table_name"]
-            for key, value in request.form.items():
-                print ((key, value))
-            update_items = [request.form[key] for key in request.form if request.form[key].startswith("id")]
-            update_items = [item.split("__sep__") for item in update_items]
-            update_dict_by_id = {}
-            
-            if len(update_items) > 0:
-                for item in update_items:
-                    attr = dict(map(lambda s: s.split("__fieldsep__"), item))
-                    # msg += ", ".join(map(str, ["%s: %s" % (key, attr[key]) for key in attr])) + "<br />"
-                    if attr["id"] not in update_dict_by_id:
-                        update_dict_by_id[attr["id"]] = OrderedDict()
-                    update_dict_by_id[attr["id"]][attr["column"]] = attr["value"]
-                    # msg += "%r %r %r" % (row_id, update_dict_by_id[row_id], item) + "<br />"
-                for row_id in update_dict_by_id:
-                    err_msg = []
-                    col_and_val = ", ".join(["%s = '%s'" % (column, update_dict_by_id[row_id][column]) for column in update_dict_by_id[row_id]])
-                    rc = update(table_name, col_and_val, "id = " + row_id, err_msg)
-                    if rc == -1: # error occured
+
+            for name in request.form:
+                err_msg = []
+                # update row
+                if name.startswith("id-"):
+                    row_id = name.split("-")[1]
+                    delta_dict = json.loads(request.form[name])
+                    # msg += "update: %s, %r" % (name, delta_dict) + "<br />"
+                    rc = update(table_name,
+                                delta_dict,
+                                condition="id = %s" % row_id,
+                                errmsg=err_msg)
+                    if rc < 0:
+                        msg += "update failed, id: %s, delta_dict: %r" % (row_id, delta_dict) + "<br />"
                         msg += err_msg[0] + "<br />"
-                    else:
-                        updated_rows += rc
+
+                elif name.startswith("newrow-"):
+                    msg += "insert: %s, %r" % (name, request.form[name]) + "<br />"
+                    # TODO
+
+
 
         except Exception as e:
             # application.logger.error("Exception in login: " + str(e))

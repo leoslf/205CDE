@@ -15,7 +15,7 @@
         </div>
         <div class="collapse navbar-collapse" id="navbar">
             <ul class="nav navbar-nav">
-                {% for item in g.nav %}
+                {% for item in query("navigation", orderby="position", filter=dict(bar="shared")) %}
                 <li>
                     <a href="/{{ item['href'] }}">{{ item['caption'] }}</a>
                 </li>

@@ -10,8 +10,6 @@ from app.utils import *
 @application.before_request
 def before_request():
     g.app_name = "205CDE"
-    g.nav = query("navigation", filter=dict(bar="shared"))
-    g.cms_nav = query("navigation", filter=dict(bar="cms"))
     g.authentication = authentication
 
 # matching route and handler

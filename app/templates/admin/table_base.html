@@ -1,6 +1,11 @@
 {% extends 'admin/base.html' %}
 
-{% set result = query(table, desc=True) %}
+{% if bar is defined %}
+    {% set result = query(table, desc=True, filter=dict(bar=bar)) %}
+{% else %}
+    {% set result = query(table, desc=True) %}
+{% endif %}
+
 
 {# transpose to get the column name only #}
 {% set columns = list(zip(*result['description']))[0] %}
@@ -18,6 +23,7 @@
             </div>
             <div class="row">
                 {% include 'errmsg.html' %}
+                <!-- submitted rows generated in js -->
                 <form method="POST" action="update_table">
                     <div class="table-responsive">
                         <table class="table table-striped" id="table">

@@ -22,18 +22,19 @@
                         options.editor = options.editor.clone();
                         return options;
                     };
+
                 var current_options = $.extend(default_options(), options),
                     key = {
                         left: 0x25, up: 0x26, right: 0x27, down: 0x28, enter: 0xd, esc: 0x1b, tab: 0x9,
                     },
-                    elem = $(this),
+                    table = $(this),
                     active_elem,
                     editor = current_options.editor
                                    .css("position", "absolute")
                                    .hide()
-                                   .appendTo(elem.parent()),
+                                   .appendTo(table.parent()),
                     showEditor = function (select) {
-                        active_elem = elem.find("td:focus");
+                        active_elem = table.find("td:focus");
                         if (active_elem.length) {
                             editor.val(active_elem.text())
                                 .removeClass("error")
@@ -64,20 +65,7 @@
                             active_elem.html(content_backup);
                         else {
                             active_elem.addClass("changed");
-                            /* add <input type="hide" name="" value="" /> */
-                            const sep = "__sep__";
-                            const fieldsep = "__fieldsep__";
-                            var id = "id" + fieldsep + active_elem.siblings(":first").text() + sep
-                                    + "column" + fieldsep + elem.find("th").eq(active_elem.index()).text();
-                            if ($("#" + id).length == 0) {
-                                $("<input>").attr({
-                                    name: id,
-                                    type: "text",
-                                    class: "hidden"
-                                }).appendTo(elem.parent());
-                            }
-                            $("input[name=" + id + "]").attr("value", id + sep + "value" + fieldsep + active_elem.text());
-                        }
+                       }
 
 
                     },
@@ -138,7 +126,7 @@
                         editor.removeClass("error");
                 });
 
-                elem.on("click keypress dblclick", showEditor)
+                table.on("click keypress dblclick", showEditor)
                     .css("cursor", "pointer")
                     .keydown(function (event) {
                         var prevent = true,
@@ -160,7 +148,7 @@
                         }
                     });
                 
-                elem.find("td").prop("tabindex", 1);
+                table.find("td").prop("tabindex", 1);
 
                 $(window).on("resize", function () {
                     if (editor.is(":visible")) 
@@ -177,6 +165,8 @@
 $("#addrow_btn").on("click", function () {
     "use strict";
     var tr = $("<tr>");
+    tr.addClass("new-row");
+
     for (var i = 0; i < $("#table > thead > tr > th").length; ++i) {
         var td = $("<td>");
         td.attr("tabindex", 1);
@@ -184,3 +174,64 @@ $("#addrow_btn").on("click", function () {
     }
     $("#table > tbody").append(tr);
 });
+
+/* add <input type="hide" name="" value="" /> */
+/*
+const sep = "__sep__";
+const fieldsep = "__fieldsep__";
+var id = "id" + fieldsep + active_elem.siblings(":first").text() + sep
+    + "column" + fieldsep + elem.find("th").eq(active_elem.index()).text();
+if ($("#" + id).length == 0) {
+$("<input>").attr({
+    name: id,
+    type: "text",
+    class: "hidden"
+}).appendTo(elem.parent());
+}
+$("input[name=" + id + "]").attr("value", id + sep + "value" + fieldsep + active_elem.text());
+*/
+
+function colname(table, col) {
+    return table.find("th").eq($(col).index()).text();
+}
+
+$("#table").closest("form").submit(function (e) {
+    "use strict";
+    // console.log("submitting");
+    /* loop through rows */
+    var table = $("#table"),
+        new_row_count = 0;
+    $("#table > tbody > tr").each(function (i, row) {
+        var delta_dict = {};
+        $(row).find("td").each(function (j, col) {
+            // console.log("col " + j + " class: " + $(col).attr("class"));
+            if ($(col).hasClass("changed")) {
+                var column_name = colname(table, col),
+                    column_value = $(col).text();
+                delta_dict[column_name] = column_value;
+            }
+        });
+
+        if (Object.keys(delta_dict).length > 0) {
+            var row_id = $(row).find("td:first").text(),
+                input_name = $(row).hasClass("new-row") 
+                                ? "newrow-" + new_row_count++ 
+                                : "id-" + row_id; // Primary Key
+            console.log(input_name);
+            /* new row */
+            $("<input>").attr({
+                name: input_name,
+                type: "text",
+                class: "hidden",
+                value: JSON.stringify(delta_dict)
+            }).appendTo(table.parent());
+        }
+    });
+
+    
+    // prevent default
+    //return false; // superfluous, but placed here for fallback
+    
+    return true; // continue to submit form with update_table
+});
+    

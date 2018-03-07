@@ -29,9 +29,11 @@ def query(table,
           condition="",
           join="",
           desc=False,
+          orderby=None,
           filter=None):
 
     sql = "SELECT %s FROM %s" % (column, table) \
+            + ((" ORDER BY " + orderby if orderby is not None else "")) \
             + ((" WHERE " + condition) if condition != "" else "") \
             + ((" INNER JOIN " + join) if join != "" else "")
     #debug(sql)
@@ -86,11 +88,16 @@ def insert(table,
     return -1
 
 def update(table,
-           column_and_value="",
+           values,
            condition="",
            errmsg=None):
 
-    sql = ("UPDATE " + table + " SET " + column_and_value + ((" WHERE " + condition) if condition != "" else ""))
+    col_n_val = ", ".join(["%s = '%s'" % (column, values[column]) for column in values])
+
+    sql = "UPDATE " + table \
+            + " SET " + col_n_val \
+            + ((" WHERE " + condition) if condition != "" else "")
+
     #debug(sql)
     print (sql)
     

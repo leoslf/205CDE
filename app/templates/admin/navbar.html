@@ -15,7 +15,7 @@
                     <a href="."><strong>CMS</strong></a>
                 </li>
                 <li class="divider"></li>
-                {% for item in g.cms_nav %}
+                {% for item in query("navigation", orderby="position", filter=dict(bar="cms")) %}
                 <li>
                     <a href="{{ item['href'] }}">{{ item['caption'] }}</a>
                 </li>

@@ -92,6 +92,7 @@ def update(table,
 
     sql = ("UPDATE " + table + " SET " + column_and_value + ((" WHERE " + condition) if condition != "" else ""))
     #debug(sql)
+    print (sql)
     
     conn = db_conn()
     assert(conn is not None)

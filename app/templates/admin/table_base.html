@@ -1,41 +1,48 @@
 {% extends 'admin/base.html' %}
 
+{% set result = query(table, desc=True) %}
+
+{# transpose to get the column name only #}
 {% set columns = list(zip(*result['description']))[0] %}
 
 {% block article %}
     <div class="row">
         <header>
-            <div class="col-sm-12">
-                <h1>{% block article_title %}{% endblock %}</h1>
-            </div>
+            <h1>{% block article_title %}{% endblock %}</h1>
         </header>
     </div>
     <div class="row">
         {% if result is not none %}
-            <script>
-                {% for col_name in columns %}
-                    console.log({{ col_name }});
-                {% endfor %}
-            </script>
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            {% for col_name in columns %}
-                                <th>{{ col_name }}</th>
-                            {% endfor %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for row in result['rows'] %}
-                            <tr>
-                                {% for col in row %}
-                                    <td>{{ row[col] }}</td>
+            <div class="row">
+                <button id="addrow_btn" class="btn btn-default pull-right"><span class="glyphicon glyphicon-plus"></span> Add Row</button>
+            </div>
+            <div class="row">
+                {% include 'errmsg.html' %}
+                <form method="POST" action="update_table">
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="table">
+                            <thead>
+                                <tr>
+                                    {% for col_name in columns %}
+                                        <th>{{ col_name }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in result['rows'] %}
+                                    <tr>
+                                        {% for col in row %}
+                                            <td>{{ row[col] }}</td>
+                                        {% endfor %}
+                                    </tr>
                                 {% endfor %}
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                            </tbody>
+                        </table>
+                    </div>
+                    <input type="hidden" name="table_name" value={{ table }} />
+                    <button type="submit" class="btn btn-default">Submit</button>
+                    <button type="reset" class="btn btn-default" onClick="window.location.reload()">Reset</button>
+                </form>
             </div>
         {% else %}
             <script>
@@ -49,5 +56,9 @@
             </script>
         {% endif %}
     </div>
+    <script src="/editable_table.js"></script>
+    <script>
+        $('#table').editabletbl();
+    </script>
 {% endblock %}
 

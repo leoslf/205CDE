@@ -1,5 +1,6 @@
 import sys
 import os
+from urlparse import urlparse
 from flask import *
 from app.db_connection import *
 
@@ -24,8 +25,8 @@ def authentication():
     
     return False
 
-def errmsg(msg, page="error.html"):
-    resp = make_response(render_template(str(page)))
+def errmsg(msg, page="error.html", f=render_template):
+    resp = make_response(f(urlparse(str(page)).path))
     resp.set_cookie("errmsg", str(msg))
     return resp
 

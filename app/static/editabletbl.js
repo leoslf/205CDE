@@ -167,11 +167,10 @@ $("#addrow_btn").on("click", function () {
 
     var tr = $("<tr>").addClass("new-row");
 
-    for (var i = 0; i < $("#table > thead > tr > th").length; ++i) {
-        var td = $("<td>");
-        td.attr("tabindex", 1);
-        tr.append(td);
-    }
+    $("#table > thead > tr > th").each(function() {
+        $("<td>").attr("tabindex", 1).appendTo(tr);
+    });
+
     $("#table > tbody").append(tr);
 });
 
@@ -184,28 +183,23 @@ $("#table").closest("form").submit(function (e) {
         return table.find("th").eq($(col).index()).text();
     }
 
-    // console.log("submitting");
-    
     /* loop through rows */
     var table = $("#table"),
         new_row_count = 0;
+
     $("#table > tbody > tr").each(function (i, row) {
         var delta_dict = {};
-        $(row).find("td").each(function (j, col) {
-            // console.log("col " + j + " class: " + $(col).attr("class"));
-            if ($(col).hasClass("changed")) {
-                var column_name = colname(table, col),
-                    column_value = $(col).text();
-                delta_dict[column_name] = column_value;
-            }
+        $(row).find("td[class=changed]").each(function (j, col) {
+            /* delta_dict[column] = value */
+            delta_dict[colname(table, col)] = $(col).text();
         });
 
-        if (Object.keys(delta_dict).length > 0) {
+        if ($.isEmptyObject(delta_dict) === false) {
             var row_id = $(row).find("td:first").text(),
                 input_name = $(row).hasClass("new-row") 
                                 ? "newrow-" + new_row_count++ 
                                 : "id-" + row_id; // Primary Key
-            console.log(input_name);
+            // console.log(input_name);
             /* new row */
             $("<input>").attr({
                 name: input_name,
@@ -216,11 +210,8 @@ $("#table").closest("form").submit(function (e) {
         }
     });
 
-    
-    // prevent default
-    //return false; // superfluous, but placed here for fallback
-    
-    // continue to submit form with update_table
+    /* Continue form submit */
     return true; 
 });
     
+$("#table").editabletbl();

@@ -1,5 +1,5 @@
 function navbar_active() {
-    $("#shared_navbar > div > div > ul > li > a").each(function(index, element) {
+    $("#shared_navbar").find("a").each(function(index, element) {
         var href = $(element).attr("href");
         console.log("href: " + href + " vs " + window.location.pathname);
         if (href == window.location.pathname)

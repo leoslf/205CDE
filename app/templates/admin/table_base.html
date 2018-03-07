@@ -19,14 +19,14 @@
     <div class="row">
         {% if result is not none %}
             <div class="row">
+                {% include 'errmsg.html' %}
                 <button id="addrow_btn" class="btn btn-default pull-right"><span class="glyphicon glyphicon-plus"></span> Add Row</button>
             </div>
             <div class="row">
-                {% include 'errmsg.html' %}
                 <!-- submitted rows generated in js -->
-                <form method="POST" action="update_table">
-                    <div class="table-responsive">
-                        <table class="table table-striped" id="table">
+                <div class="container-fluid">
+                    <form method="POST" action="update_table">
+                        <table class="table table-striped table-responsive" id="table">
                             <thead>
                                 <tr>
                                     {% for col_name in columns %}
@@ -44,11 +44,11 @@
                                 {% endfor %}
                             </tbody>
                         </table>
-                    </div>
-                    <input type="hidden" name="table_name" value={{ table }} />
-                    <button type="submit" class="btn btn-default">Submit</button>
-                    <button type="reset" class="btn btn-default" onClick="window.location.reload()">Reset</button>
-                </form>
+                        <input type="hidden" name="table_name" value={{ table }} />
+                        <button type="submit" class="btn btn-default">Submit</button>
+                        <button type="reset" class="btn btn-default" onClick="window.location.reload()">Reset</button>
+                    </form>
+                </div>
             </div>
         {% else %}
             <script>
@@ -62,9 +62,6 @@
             </script>
         {% endif %}
     </div>
-    <script src="/editable_table.js"></script>
-    <script>
-        $('#table').editabletbl();
-    </script>
+    <script src="/editabletbl.js"></script>
 {% endblock %}
 

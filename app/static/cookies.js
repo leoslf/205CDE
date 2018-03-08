@@ -1,11 +1,24 @@
+"use strict";
+
+function cookie_dict() {
+    var dict = {},
+        lst = decodeURIComponent(document.cookie).split(";")
+                    .map(x => x.trim());
+
+    lst.forEach(function (e) {
+        if (e != "") {
+            var name = e.substring(0, e.indexOf("=")),
+                value = e.substring(e.indexOf("=") + 1, e.length)
+                            .replace(/"([^"]+(?="))"/g, "$1");
+            dict[name] = value;
+        }
+    });
+    return dict;
+}
+
 function get_cookie(name) {
-    var lst = decodeURIComponent(document.cookie).split(";");
-    for (var i = 0; i < lst.length; ++i) {
-        var c = lst[i].trim();
-        if (c.indexOf(name) == 0 && c !== "")
-            return c.substring(c.indexOf("=") + 1, c.length).replace(/"([^"]+(?="))"/g, '$1');
-    }
-    return "";
+    var dict = cookie_dict();
+    return name in dict ? dict[name] : "";
 }
 
 

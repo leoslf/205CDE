@@ -26,6 +26,7 @@ def display(page):
 def update_table():
     if request.method == "POST":
         msg = ""
+        debug_msg = ""
         updated_rows = 0
         inserted_rows = 0
         print ("referrer: " + request.referrer)
@@ -53,7 +54,7 @@ def update_table():
                         updated_rows += rc
 
                 elif name.startswith("newrow-"):
-                    msg += "insert: %s, %r" % (name, request.form[name]) + "<br />"
+                    debug_msg += "insert: %s, %r" % (name, request.form[name]) + "<br />"
                     delta_dict = json.loads(request.form[name])
                     rc = insert(table_name,
                                 values = delta_dict,

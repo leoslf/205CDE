@@ -1,8 +1,8 @@
 import os
 from flask import Flask
-from .config import DevelopmentConfig
-from .db_connection import *
-from .blueprints.admin import admin
+from crm.config import DevelopmentConfig
+from crm.db_connection import *
+from crm.blueprints.admin import admin
 
 # instantiate a Flask object
 app = Flask(__name__)
@@ -16,4 +16,4 @@ app.jinja_env.trim_blocks = True
 app.jinja_env.lstrip_blocks = True
 
 # Circular import 
-from app import views, models
+from crm import views, models

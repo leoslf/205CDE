@@ -5,7 +5,7 @@ from urlparse import urlparse
 
 from flask import *
 
-from app.db_connection import *
+from crm.db_connection import *
 
 # helper functions
 def rootpath(path=""):

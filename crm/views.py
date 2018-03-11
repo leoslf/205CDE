@@ -4,8 +4,8 @@ import sys
 import os
 from flask import *
 from jinja2 import TemplateNotFound
-from app import app as application
-from app.utils import *
+from crm import app as application
+from crm.utils import *
 
 @application.before_request
 def before_request():

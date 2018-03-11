@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from app import app
+from crm import app
 
 # prevent execution when this module is imported by others
 if __name__ == "__main__":

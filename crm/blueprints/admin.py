@@ -1,6 +1,6 @@
 from flask import *
 from jinja2 import TemplateNotFound
-from app.utils import *
+from crm.utils import *
 from collections import OrderedDict
 
 admin = Blueprint("admin", __name__,

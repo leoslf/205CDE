@@ -50,9 +50,10 @@ def login():
                 msg = "Login Error (DB), returned number of rows > 1"
             msg += str(results)
 
-        except Exception as e:
-            application.logger.error("Exception in login: " + str(e))
-            msg = "Exception occured during login query: " + str(e)
+        except:
+            tb = traceback.format_exc()
+            application.logger.error("Exception in login: " + str(tb))
+            msg = "Exception occured during login query: " + str(tb)
 
         return errmsg(msg, "login.html")
 

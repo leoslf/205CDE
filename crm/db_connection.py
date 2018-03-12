@@ -7,13 +7,17 @@ import database_credential
 from logging import *
 from collections import OrderedDict
 import pymysql
+from pymysql.cursors import DictCursorMixin, Cursor
+
+class OrderedDictCursor(DictCursorMixin, Cursor):
+    dict_type = OrderedDict
 
 def db_conn():
     """get database connection"""
     conn = None
 
     try:
-        conn = pymysql.connect(**database_credential.db)
+        conn = pymysql.connect(cursorclass=OrderedDictCursor, **database_credential.db)
     except Exception as e:
         print ("Exception:" + str(e) + "<br />")
         print ("cannot get DB connection<br />")

@@ -2,6 +2,7 @@
 
 import sys
 import os
+import traceback
 from flask import *
 from jinja2 import TemplateNotFound
 from crm import app as application

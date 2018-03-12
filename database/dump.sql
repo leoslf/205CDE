@@ -8,6 +8,9 @@ GRANT ALL ON `205CDE_Project`.* TO '205CDE'@'localhost';
 -- Create DB
 CREATE DATABASE IF NOT EXISTS 205CDE_Project;
 
+-- USE DB
+USE 205CDE_Project;
+
 -- MySQL dump 10.16  Distrib 10.1.22-MariaDB, for osx10.11 (x86_64)
 --
 -- Host: localhost    Database: 205CDE_Project

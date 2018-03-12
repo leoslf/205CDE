@@ -10,6 +10,7 @@ from crm.utils import *
 
 @application.before_request
 def before_request():
+    g.python_version = sys.version_info[0]
     g.app_name = "205CDE"
     g.authentication = authentication
 

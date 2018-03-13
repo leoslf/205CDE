@@ -14,8 +14,14 @@ def display(page):
     try:
         if logged_in() == False:
             return errmsg("Please login first")
-        if authentication():
+
+        msg = []
+        if authentication(msg):
             return render_template(admin.url_prefix + "/" + page)
+        else:
+            assert (len(msg) > 0)
+            return errmsg(msg[0]) 
+            
 
     except TemplateNotFound:
         return admin.send_static_file(page)
@@ -73,6 +79,7 @@ def update_table():
             # application.logger.error("Exception in login: " + str(e))
             exception_msg = str(e)
             msg += exception_msg
+            error(exception_msg)
 
         return errmsg(msg, request.referrer, redirect)
     return redirect(request.referrer)

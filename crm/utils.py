@@ -1,5 +1,6 @@
 import sys
 import os
+import traceback
 import json
 try:
     from urlparse import urlparse
@@ -17,17 +18,26 @@ def rootpath(path=""):
 def logged_in():
     return all(x in session for x in ("username", "displayed_username"))
 
-def authentication():
+def authentication(err_msg=None):
     if logged_in():
         try:
             # 2 == manager, 3 == admin
-            results = query("staff", condition="username = '%s' AND (role+0) >= 2" % session["username"])
+            msg = []
+            results = query("staff", condition="username = '%s' AND (role+0) >= 2" % session["username"], err_msg=msg)
             print (results)
+            if results is None and err_msg is not None and isinstance(msg, list) and len(msg) > 0:
+                err_msg.append(msg[0])
+
             if len(results) == 1:
                 # successful
                 return True
-        except Exception as e:
-            app.logger.error("authentication Exception: in query, username: %s : " % session["username"] + str(e))
+        except:
+            tb = traceback.format_exc()
+            error("authentication Exception: in query, username: %s : " % session["username"] + str(tb))
+            if err_msg is not None:
+                assert (isinstance(err_msg, list))
+                err_msg.append(tb)
+
     
     return False
 

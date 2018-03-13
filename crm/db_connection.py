@@ -32,13 +32,14 @@ def query(table,
           join="",
           desc=False,
           orderby=None,
-          filter=None):
+          filter=None,
+          err_msg=None):
 
     sql = "SELECT %s FROM %s" % (column, table) \
             + ((" ORDER BY " + orderby if orderby is not None else "")) \
             + ((" WHERE " + condition) if condition != "" else "") \
             + ((" INNER JOIN " + join) if join != "" else "")
-    #debug(sql)
+    debug(sql)
 
     conn = db_conn()
     assert(conn is not None)
@@ -54,9 +55,14 @@ def query(table,
                             if all(attrib not in item \
                                     or item[attrib] == filter[attrib]
                                 for attrib in filter)]
-            return rows if desc == False else OrderedDict([("rows", rows), ("description", cursor.description)])
-    except Exception as e:
-        print ("Exception: " + str(e) + "<br />")
+            columns = list(zip(*cursor.description))[0]
+            return rows if desc == False else OrderedDict([("rows", rows), ("description", cursor.description), ("columns", columns)])
+    except:
+        tb = traceback.format_exc()
+        error("Exception: " + str(tb) + "<br />")
+        if err_msg is not None:
+            assert (isinstance(err_msg, list))
+            err_msg.append(tb)
     finally:
         conn.close()
 
@@ -113,8 +119,7 @@ def insert(table,
     sql = "INSERT INTO " + table + " " \
             + columns \
             + " VALUE ("+ values +")"
-    #debug(sql)
-    print (sql)
+    debug(sql)
 
     conn = db_conn()
     assert(conn is not None)
@@ -145,8 +150,7 @@ def update(table,
             + " SET " + col_n_val \
             + ((" WHERE " + condition) if condition != "" else "")
 
-    #debug(sql)
-    print (sql)
+    debug(sql)
     
     conn = db_conn()
     assert(conn is not None)
@@ -172,7 +176,7 @@ def delete(table,
     
     sql = ("DELETE FROM " + table \
             + ((" WHERE " + condition) if condition != "" else ""))
-    #debug(sql)
+    debug(sql)
     
     conn = db_conn()
     assert(conn is not None)

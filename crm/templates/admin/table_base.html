@@ -8,7 +8,7 @@
 
 
 {# transpose to get the column name only #}
-{% set columns = list(zip(*result['description']))[0] %}
+{% set columns = result['columns'] %}
 
 {% block article %}
     <div class="row">
@@ -19,8 +19,10 @@
     <div class="row">
         {% if result is not none %}
             <div class="row">
-                {% include 'errmsg.html' %}
-                <button id="addrow_btn" class="btn btn-default pull-right"><span class="glyphicon glyphicon-plus"></span> Add Row</button>
+                <div class="container-fluid">
+                    {% include 'errmsg.html' %}
+                    <button id="addrow_btn" class="btn btn-default pull-right"><span class="glyphicon glyphicon-plus"></span> Add Row</button>
+                </div>
             </div>
             <div class="row">
                 <!-- submitted rows generated in js -->

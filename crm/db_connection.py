@@ -5,7 +5,9 @@ import sys
 sys.path.insert(0, "../../http_credential")
 import database_credential
 from logging import *
+import traceback
 from collections import OrderedDict
+import re
 import pymysql
 from pymysql.cursors import DictCursorMixin, Cursor
 
@@ -23,10 +25,6 @@ def db_conn():
         print ("cannot get DB connection<br />")
 
     return conn
-
-#if __name__ == "__main__":
-#    header()
-#    print (database_credential.db.items())
 
 def query(table,
           column="*",
@@ -64,6 +62,35 @@ def query(table,
 
     return None
 
+def column_enum(table, column):
+    sql = """
+        SELECT COLUMN_TYPE 
+        FROM information_schema.`COLUMNS` 
+        WHERE TABLE_NAME = '%s' AND COLUMN_NAME = '%s'""" % (table, column)
+    
+    conn = db_conn()
+    assert(conn is not None)
+
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute(sql)
+
+            rows = cursor.fetchone()
+            assert (len(rows) == 1)
+            print (rows["COLUMN_TYPE"])
+            values_str = re.search("\\(([^\\)]+)\\)", rows["COLUMN_TYPE"])
+            values = values_str.group(1).split(",")
+            values = [re.match("'([^']+)'", s).group(1) for s in values]
+            return values
+
+    except:
+        tb = traceback.format_exc()
+        error ("Exception: " + str(tb) + "<br />")
+    finally:
+        conn.close()
+
+    return None
+ 
 def insert(table,
            columns="",
            values="",

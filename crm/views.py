@@ -29,7 +29,6 @@ def settings():
 
 @application.route("/login", methods = ["POST", "GET"])
 def login():
-    content = ""
     # Login Already 
     if logged_in():
         return redirect("/")

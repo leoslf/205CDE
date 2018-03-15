@@ -31,6 +31,7 @@
                 const key = { left: 0x25, up: 0x26, right: 0x27, down: 0x28, enter: 0xd, esc: 0x1b, tab: 0x9, };
 
                 var active_cell,
+                    orderingColumn = table.find("th:first-child").addClass("order"),
                     editor = current_options.editor
                                    .css("position", "absolute")
                                    .hide()
@@ -50,6 +51,7 @@
                             if (select)
                                 editor.select();
                         }
+                        // console.log("showEditor()");
                     },
                     setActiveText = function () {
                         var text = editor.val(),
@@ -69,7 +71,6 @@
                             active_cell.addClass("changed");
                        }
 
-
                     },
                     movement = function (elem, keycode) {
                         switch (keycode) {
@@ -83,6 +84,32 @@
                                 return elem.parent().next().children().eq(elem.index());
                         }
                         return [];
+                    },
+                    columnClick = function (e) {
+                        orderingColumn.removeClass("order");
+                        orderingColumn = $(e.target);
+                        orderingColumn.addClass("order");
+
+                        var idx = orderingColumn.index(),
+                            tbody = table.find("tbody"),
+                            rows = tbody.children("tr");
+
+
+                        function comparator(_a, _b) {
+                            //console.log(_a);
+                            //console.log(_b);
+                            var a = $(_a).find("td").eq(idx).text(),
+                                b = $(_b).find("td").eq(idx).text();
+                            //console.log(a + ", " + b);
+                            if (a < b)
+                                return -1;
+                            else if (a > b)
+                                return 1;
+                            return 0;
+                        }
+                        rows.sort(comparator)
+                            .detach()
+                            .appendTo(tbody);
                     };
 
                 editor.blur(function () {
@@ -127,8 +154,9 @@
                         editor.removeClass("error");
                 });
 
-                table.on("click keypress dblclick", showEditor)
-                    .css("cursor", "pointer")
+                table.css("cursor", "pointer")
+                    .on("click", "thead > tr > th", columnClick)
+                    .on("click keypress dblclick", "tbody", showEditor)
                     .keydown(function (event) {
                         var prevent = true,
                             move = movement($(event.target), event.which);
@@ -147,6 +175,7 @@
                             event.stopPropagation();
                             event.preventDefault();
                         }
+                        console.log("inside tbody");
                     });
                 
                 table.find("td").prop("tabindex", 1);

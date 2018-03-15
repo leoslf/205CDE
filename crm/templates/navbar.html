@@ -33,8 +33,16 @@
                         </a>
                             <ul class="dropdown-menu">
                                 <li><a href="/settings">Settings</a></li>
-                                {% if g.authentication() %}
+                                {% set msg = [] %}
+                                {% if g.authentication(err_msg=msg) %}
                                     <li><a href="/admin">Admin</a></li>
+                                {% else %}
+                                    {% if msg | length > 0 %}
+                                        <script>
+                                            alert("check console log");
+                                            console.log(`{{ msg[0] }}`);
+                                        </script>
+                                    {% endif %}
                                 {% endif %}
                                 <li role="separator" class="divider"></li>
                                 <li><a href="/logout">Logout</a></li>

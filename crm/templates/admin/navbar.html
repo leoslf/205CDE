@@ -1,26 +1,25 @@
-<div class="container-fluid">
-    <nav class="navbar navbar-default sidebar" role="navigation" id="cms_navbar">
-        <!-- Sidebar Header -->
-        <div class="navbar-header">
-            <button type="button" class="pull-left navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-        </div>
-        <div class="collapse navbar-collapse sidebar-collapse">
-            <ul class="nav nav-stacked">
-                <li class="text-center"> 
-                    <a href="."><strong>CMS</strong></a>
-                </li>
-                <li class="divider"></li>
-                {% for item in query("navigation", orderby="position", filter=dict(bar="cms")) %}
-                <li>
-                    <a href="{{ item['href'] }}">{{ item['caption'] }}</a>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-    </nav>
-</div>
+<nav class="navbar navbar-default sidebar" role="navigation" id="cms_navbar">
+    <!-- Sidebar Header -->
+    <div class="navbar-header">
+        <button type="button" class="pull-left navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+    </div>
+    <!-- <div class="collapse navbar-collapse sidebar-collapse"> -->
+    <div class="collapse navbar-collapse">
+        <ul class="nav nav-stacked">
+            <li class="text-center"> 
+                <a href="."><strong>CMS</strong></a>
+            </li>
+            <li class="divider"></li>
+            {% for item in query("navigation", orderby="position", filter=dict(bar="cms")) %}
+            <li>
+                <a href="{{ item['href'] }}">{{ item['caption'] }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</nav>

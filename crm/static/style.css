@@ -1,40 +1,26 @@
 /* fix the bottom of navbar */
-/*
-.navbar {
-    margin-bottom: 0;
-}
-*/
+
 #errmsg {
     color: red;
 }
+
 .sidebar {
-    position: relative;
-    width: 100%;
-    height: auto;
     margin-bottom: 10px;
     background-color: white;
     border-color: white;
     float: left;
 }
 
-.main {
-    position: relative;
-    width: 100%;
-    float: right;
-}
-
 @media (min-width: 767px) {
     .sidebar {
-        overflow: auto;
-        position: fixed;
-        /* missing 5% */
-        width: 15%;
         height: 100%;
     }
-    .main {
-        width: 80%;
-    }
 }
+
+.main {
+    width: 100%; 
+}
+
 
 .sidebar-brand {
     display: block;

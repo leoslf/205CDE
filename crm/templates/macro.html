@@ -1,0 +1,9 @@
+{# macro definitions #}
+
+{% macro error(msg) -%}
+    <script>
+        set_cookie("errmsg", "{% autoescape false %}{{ msg | replace('\n', '<br />') | replace('"', '\\"') }}{% endautoescape %}");
+    </script>
+    {% include 'errmsg.html' %}
+{%- endmacro %}
+

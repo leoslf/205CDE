@@ -36,10 +36,10 @@ def query(table,
           err_msg=None):
 
     sql = "SELECT %s FROM %s" % (column, table) \
-            + ((" ORDER BY " + orderby if orderby is not None else "")) \
-            + ((" WHERE " + condition) if condition != "" else "") \
-            + ((" INNER JOIN " + join) if join != "" else "")
-    debug(sql)
+            + (" ORDER BY " + orderby if orderby is not None else "") \
+            + (" WHERE " + condition if condition != "" else "") \
+            + (" INNER JOIN " + join if join != "" else "")
+    print (sql)
 
     conn = db_conn()
     assert(conn is not None)
@@ -61,8 +61,10 @@ def query(table,
         tb = traceback.format_exc()
         error("Exception: " + str(tb) + "<br />")
         if err_msg is not None:
+            print ("err_msg is not None")
             assert (isinstance(err_msg, list))
             err_msg.append(tb)
+            print (err_msg)
     finally:
         conn.close()
 

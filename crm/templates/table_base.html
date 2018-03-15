@@ -1,21 +1,14 @@
 {% extends 'base.html' %}
 
-{% macro error(msg) -%}
-    <script>
-        set_cookie("errmsg", "{% autoescape false %}{{ msg | replace('\n', '<br />') | replace('"', '\\"') }}{% endautoescape %}");
-    </script>
-    {% include 'errmsg.html' %}
-{%- endmacro %}
-
 {% block content %}
     <div class="row">
-        <header>
+        <!-- <header> -->
             {% if header is defined %}
                 <h1>{{ header }}</h1>
             {% else %}
                 <h1>Table Base - (header is not defined)</h1>
             {% endif %}
-        </header>
+        <!-- </header> -->
     </div>
     <div class="row">
         {% if table is defined %}

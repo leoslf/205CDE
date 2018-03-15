@@ -41,6 +41,8 @@ def update_table():
             #     print ((key, request.form[key]))
             # msg = request.form["table_name"] + "<br />" +  "<br />".join(map(str, ["%s: %s" % (key, request.form[key]) for key in request.form]))
             table_name = request.form["table_name"]
+            print ("UPDATE: " + table_name)
+            print (str(request.form))
 
             for name in request.form:
                 err_msg = []

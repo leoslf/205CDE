@@ -1,3 +1,6 @@
-{% set header = "Sales Order" %}
-{% set table = "staff" %}
-{% extends 'table_base.html' %}
+{% from 'macros.html' import table %}
+
+{% extends 'base.html' %}
+{% block content %}
+    {{ table("Sales Order", "staff") }}
+{% endblock %}

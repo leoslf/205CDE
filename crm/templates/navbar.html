@@ -1,8 +1,6 @@
 {% set msg = [] %}
 {% set results = query("navigation", orderby="position", filter=dict(bar="shared"), err_msg=msg) %}
 
-<script src="/navbar.js"></script>
-<script src="/navbar_offset.js"></script>
 
 {% if results is not none %}
     <nav class="navbar navbar-default navbar-fixed-top" id="shared_navbar">
@@ -55,6 +53,7 @@
             </div> <!-- .navbar-collapse -->
         </div> <!-- .container-fluid -->
     </nav>
+    <script src="/navbar.js"></script>
 {% else %}
     <script>
         set_cookie("errmsg", "{{ msg[0] }}");

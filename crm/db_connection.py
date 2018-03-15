@@ -152,7 +152,7 @@ def update(table,
             + " SET " + col_n_val \
             + ((" WHERE " + condition) if condition != "" else "")
 
-    debug(sql)
+    print (sql)
     
     conn = db_conn()
     assert(conn is not None)
@@ -166,6 +166,7 @@ def update(table,
         msg = "MYSQLError: errno %r, %r" % (e.args[0], e)
         if errmsg is not None:
             errmsg.append(msg)
+        print (msg)
         # error(msg)
     finally:
         conn.close()

@@ -1,4 +1,5 @@
-{% set table = "staff" %}
-
-{% extends 'admin/table_base.html' %}
-{% block article_title %}Staff{% endblock %}
+{% from 'macros.html' import table, error %}
+{% extends 'admin/base.html' %}
+{% block article %}
+    {{ table("Staff", "staff") }} 
+{% endblock %}

@@ -43,8 +43,13 @@ def authentication(err_msg=None):
     
     return False
 
-def errmsg(msg, page="error.html", f=render_template):
+def set_msg(msg_dict, page, f=render_template):
     resp = make_response(f(urlparse(str(page)).path))
-    resp.set_cookie("errmsg", str(msg))
+    assert (isinstance(msg_dict, dict))
+    for key in msg_dict:
+        resp.set_cookie(key + "msg", msg_dict[key])
     return resp
+
+def errmsg(msg, page="error.html", f=render_template):
+    return set_msg({'err' : msg}, page, f)
 

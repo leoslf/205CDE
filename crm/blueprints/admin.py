@@ -31,8 +31,7 @@ def display(page):
 @admin.route("/update_table", methods=["POST", "GET"])
 def update_table():
     if request.method == "POST":
-        msg = ""
-        debug_msg = ""
+        msg = dict(success="", info="", warn="", err="")
         updated_rows = 0
         inserted_rows = 0
         print ("referrer: " + request.referrer)
@@ -56,32 +55,34 @@ def update_table():
                                 condition="id = %s" % row_id,
                                 errmsg=err_msg)
                     if rc < 0:
-                        msg += "update failed, id: %s, delta_dict: %r" % (row_id, delta_dict) + "<br />"
-                        msg += err_msg[0] + "<br />"
+                        msg["err"] += "update failed, id: %s, delta_dict: %r" % (row_id, delta_dict) + "<br />" \
+                                        + err_msg[0] + "<br />"
                     else:
                         updated_rows += rc
 
                 elif name.startswith("newrow-"):
-                    debug_msg += "insert: %s, %r" % (name, request.form[name]) + "<br />"
+                    msg["info"] += "insert: %s, %r" % (name, request.form[name]) + "<br />"
                     delta_dict = json.loads(request.form[name])
                     rc = insert(table_name,
                                 values = delta_dict,
                                 errmsg = err_msg)
                     if rc < 0:
-                        msg += "update failed, delta_dict: %r" % delta_dict + "<br />"
-                        msg += err_msg[0] + "<br />"
+                        msg["err"] += "update failed, delta_dict: %r" % delta_dict + "<br />" \
+                                        + err_msg[0] + "<br />"
                     else:
-                        msg += "inserted row's id: %d" % rc
+                        msg["info"] += "inserted row's id: %d" % rc
                         inserted_rows += 1
 
-            msg += "updated_rows: %d" % updated_rows + "<br />"
-            msg += "inserted_rows: %d" % inserted_rows + "<br />"
+            if updated_rows > 0:
+                msg["success"] += "updated_rows: %d" % updated_rows + "<br />"
+            if inserted_rows > 0:
+                msg["success"] += "inserted_rows: %d" % inserted_rows + "<br />"
 
         except Exception as e:
             # application.logger.error("Exception in login: " + str(e))
             exception_msg = str(e)
-            msg += exception_msg
+            msg["err"] += exception_msg
             error(exception_msg)
 
-        return errmsg(msg, request.referrer, redirect)
+        return set_msg(msg, request.referrer, redirect)
     return redirect(request.referrer)

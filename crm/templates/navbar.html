@@ -55,10 +55,6 @@
     </nav>
     <script src="/navbar.js"></script>
 {% else %}
-    <script>
-        set_cookie("errmsg", "{{ msg[0] }}");
-        console.log("{{ msg[0] }}");
-    </script>
-    {% include 'errmsg.html' %}
+    {{ error(msg[0]) }}
 {% endif %}
 

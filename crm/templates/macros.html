@@ -1,10 +1,19 @@
 {# macro definitions #}
 
+{% macro alert(id, alert_type, icon) -%}
+    <div class="alert alert-{{ alert_type }} alert-dismissible hidden" id="{{ id }}" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <span class="glyphicon glyphicon-{{ icon }}"></span>
+    </div>
+{% endmacro %}
+
+
+
 {% macro error(msg) -%}
     <script>
         set_cookie("errmsg", "{% autoescape false %}{{ msg | replace('\n', '<br />') | replace('"', '\\"') }}{% endautoescape %}");
     </script>
-    {% include 'errmsg.html' %}
+    {% include 'msg.html' %}
 {%- endmacro %}
 
 
@@ -19,7 +28,7 @@
     </div>
     <div class="row">
         <div class="container-fluid">
-            {% include 'errmsg.html' %}
+            {% include 'msg.html' %}
             <button id="addrow_btn" class="btn btn-default pull-right">
                 <span class="glyphicon glyphicon-plus"></span> Add Row
             </button>

@@ -183,27 +183,28 @@ $.fn.clicks = function (click_cb, dblclick_cb, timeout) {
 
                 table.css("cursor", "pointer")
                     .on("click", "thead > tr > th", columnClick)
-                    .clicks(showContent, showEditor)
-                    .on("keypress", "tbody", showEditor)
-                    .keydown(function (event) {
-                        var prevent = true,
-                            move = movement($(event.target), event.which);
-                        if (move.length > 0)
-                            move.focus();
-                        else if (event.which === key.enter) 
-                            showEditor(false);
-                        else if (event.which === 17 || event.which === 91 || event.which === 93) {
-                            showEditor(true);
-                            prevent = false;
-                        }
-                        else
-                            prevent = false;
-                        
-                        if (prevent) {
-                            event.stopPropagation();
-                            event.preventDefault();
-                        }
-                    });
+                    .find("tbody")
+                        .clicks(showContent, showEditor)
+                        .on("keypress", showEditor)
+                        .keydown(function (event) {
+                            var prevent = true,
+                                move = movement($(event.target), event.which);
+                            if (move.length > 0)
+                                move.focus();
+                            else if (event.which === key.enter) 
+                                showEditor(false);
+                            else if (event.which === 17 || event.which === 91 || event.which === 93) {
+                                showEditor(true);
+                                prevent = false;
+                            }
+                            else
+                                prevent = false;
+                            
+                            if (prevent) {
+                                event.stopPropagation();
+                                event.preventDefault();
+                            }
+                        });
                 
                 table.find("td").prop("tabindex", 1);
 

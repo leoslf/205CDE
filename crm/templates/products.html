@@ -2,5 +2,11 @@
 
 {% extends 'base.html' %}
 {% block content %}
-    {{ table("Products", "Product") }}
+    {% set btns = {
+        'images': {
+            'text' : 'Images',
+            'onclick' : "$('#dialog').modal('toggle');"
+            }
+        } %}
+    {{ table("Products", "Product", btns=btns) }}
 {% endblock %}

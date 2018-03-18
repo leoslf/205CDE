@@ -7,12 +7,14 @@
     </div>
 {% endmacro %}
 
+
 {% macro error(msg) -%}
     <script>
         set_cookie("errmsg", "{% autoescape false %}{{ msg | replace('\n', '<br />') | replace('"', '\\"') }}{% endautoescape %}");
     </script>
     {% include 'msg.html' %}
 {%- endmacro %}
+
 
 {% macro modal(id, header_text, content) -%}
     <div id="{{ id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-label">
@@ -34,6 +36,7 @@
     </div> <!-- /.modal -->
 {%- endmacro %}
 
+
 {% macro table(header_text, table, ro=false) -%}
     <div class="row">
         <div class="container-fluid">
@@ -45,7 +48,15 @@
     <div class="row">
         <div class="container-fluid">
             {% include 'msg.html' %}
-            <button id="addrow_btn" class="btn btn-default pull-right">
+            {% if 'btns' in kwargs and isinstance(kwargs['btns'], dict) %}
+                {% for key in kwargs['btns'] %}
+                    {% set e = kwargs['btns'][key] %}
+                    <button id="{{ key }}" class="btn btn-default" type="button" onclick="{{ e['onclick'] if 'onclick' in e else ''}}">
+                        {{- e['text'] -}}
+                    </button>
+                {% endfor %}
+            {% endif %}
+            <button id="addrow_btn" class="btn btn-default pull-right" type="button">
                 <span class="glyphicon glyphicon-plus"></span> Add Row
             </button>
         </div>

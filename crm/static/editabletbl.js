@@ -1,5 +1,26 @@
 "use strict";
 
+$.fn.clicks = function (click_cb, dblclick_cb, timeout) {
+    return this.each(function () {
+        var click_cnt = 0,
+            obj = this;
+        $(this).click(function (e) {
+            ++click_cnt;
+            if (click_cnt == 1)
+                setTimeout(function () {
+                    if (click_cnt == 1)
+                        click_cb(self, e);
+                    else
+                        dblclick_cb(self, e);
+
+                    click_cnt = 0;
+                }, timeout || 300);
+        });
+    });
+};
+
+
+
 /* jQuery Plugin */
 (function ($) {
     /* Attaching new method to jQuery */
@@ -162,8 +183,8 @@
 
                 table.css("cursor", "pointer")
                     .on("click", "thead > tr > th", columnClick)
-                    .on("click", "tbody", showContent)
-                    .on("keypress dblclick", "tbody", showEditor)
+                    .clicks(showContent, showEditor)
+                    .on("keypress", "tbody", showEditor)
                     .keydown(function (event) {
                         var prevent = true,
                             move = movement($(event.target), event.which);

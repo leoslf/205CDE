@@ -21,8 +21,8 @@ def db_conn():
     try:
         conn = pymysql.connect(cursorclass=OrderedDictCursor, **database_credential.db)
     except Exception as e:
-        print ("Exception:" + str(e) + "<br />")
-        print ("cannot get DB connection<br />")
+        debug("Exception:" + str(e) + "<br />")
+        debug("cannot get DB connection<br />")
 
     return conn
 
@@ -33,13 +33,15 @@ def query(table,
           desc=False,
           orderby=None,
           filter=None,
-          err_msg=None):
+          err_msg=None,
+          *argv,
+          **kwargs):
 
     sql = "SELECT %s FROM %s" % (column, table) \
             + (" ORDER BY " + orderby if orderby is not None else "") \
             + (" WHERE " + condition if condition != "" else "") \
             + (" INNER JOIN " + join if join != "" else "")
-    print (sql)
+    debug(sql)
 
     conn = db_conn()
     assert(conn is not None)
@@ -61,10 +63,10 @@ def query(table,
         tb = traceback.format_exc()
         error("Exception: " + str(tb) + "<br />")
         if err_msg is not None:
-            print ("err_msg is not None")
+            debug("err_msg is not None")
             assert (isinstance(err_msg, list))
             err_msg.append(tb)
-            print (err_msg)
+            debug(err_msg)
     finally:
         conn.close()
 
@@ -85,7 +87,7 @@ def column_enum(table, column):
 
             rows = cursor.fetchone()
             assert (len(rows) == 1)
-            print (rows["COLUMN_TYPE"])
+            debug(rows["COLUMN_TYPE"])
             values_str = re.search("\\(([^\\)]+)\\)", rows["COLUMN_TYPE"])
             values = values_str.group(1).split(",")
             values = [re.match("'([^']+)'", s).group(1) for s in values]
@@ -102,7 +104,9 @@ def column_enum(table, column):
 def insert(table,
            columns="",
            values="",
-           errmsg=None):
+           errmsg=None,
+           *argv,
+           **kwargs):
 
     if columns == "" and isinstance(values, dict):
         columns = "(" + ", ".join(map(str, values.keys())) + ")"
@@ -144,7 +148,9 @@ def insert(table,
 def update(table,
            values,
            condition="",
-           errmsg=None):
+           errmsg=None,
+           *argv,
+           **kwargs):
 
     col_n_val = ", ".join(["%s = '%s'" % (column, values[column]) for column in values])
 
@@ -152,7 +158,7 @@ def update(table,
             + " SET " + col_n_val \
             + ((" WHERE " + condition) if condition != "" else "")
 
-    print (sql)
+    debug(sql)
     
     conn = db_conn()
     assert(conn is not None)
@@ -166,7 +172,7 @@ def update(table,
         msg = "MYSQLError: errno %r, %r" % (e.args[0], e)
         if errmsg is not None:
             errmsg.append(msg)
-        print (msg)
+        debug(msg)
         # error(msg)
     finally:
         conn.close()
@@ -175,7 +181,9 @@ def update(table,
 
 def delete(table,
            condition="",
-           errmsg=None):
+           errmsg=None,
+           *argv,
+           **kwargs):
     
     sql = ("DELETE FROM " + table \
             + ((" WHERE " + condition) if condition != "" else ""))

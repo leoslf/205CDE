@@ -36,22 +36,54 @@
                                    .css("position", "absolute")
                                    .hide()
                                    .appendTo(table.parent()),
-                    showEditor = function (select) {
-                        active_cell = table.find("td:focus");
-                        if (active_cell.length) {
-                            editor.val(active_cell.text())
-                                .removeClass("error")
-                                .show()
-                                .offset(active_cell.offset())
-                                .css(active_cell.css(current_options.css_properties))
-                                .width(active_cell.width())
-                                .height(active_cell.height())
-                                .focus();
+                    columnClick = function (e) {
+                        orderingColumn.removeClass("order");
+                        orderingColumn = $(e.target);
+                        orderingColumn.addClass("order");
 
-                            if (select)
-                                editor.select();
+                        var idx = orderingColumn.index(),
+                            tbody = table.find("tbody"),
+                            rows = tbody.children("tr");
+
+
+                        function comparator(_a, _b) {
+                            var a = $(_a).find("td").eq(idx).text(),
+                                b = $(_b).find("td").eq(idx).text();
+
+                            if (a < b)
+                                return -1;
+                            else if (a > b)
+                                return 1;
+                            return 0;
                         }
-                        // console.log("showEditor()");
+                        rows.sort(comparator)
+                            .detach()
+                            .appendTo(tbody);
+                    },
+                    showContent = function (e) {
+                        var current_row = table.find("td:focus").siblings().first();
+                        console.log(current_row.text());
+                        console.log($("#table_name").val());
+                        console.log(current_row);
+                        $("#dialog").modal("toggle");
+                    },
+                    showEditor = function (select) {
+                        if (table.hasClass("rw")) {
+                            active_cell = table.find("td:focus");
+                            if (active_cell.length) {
+                                editor.val(active_cell.text())
+                                    .removeClass("error")
+                                    .show()
+                                    .offset(active_cell.offset())
+                                    .css(active_cell.css(current_options.css_properties))
+                                    .width(active_cell.width())
+                                    .height(active_cell.height())
+                                    .focus();
+
+                                if (select)
+                                    editor.select();
+                            }
+                        }
                     },
                     setActiveText = function () {
                         var text = editor.val(),
@@ -84,32 +116,6 @@
                                 return elem.parent().next().children().eq(elem.index());
                         }
                         return [];
-                    },
-                    columnClick = function (e) {
-                        orderingColumn.removeClass("order");
-                        orderingColumn = $(e.target);
-                        orderingColumn.addClass("order");
-
-                        var idx = orderingColumn.index(),
-                            tbody = table.find("tbody"),
-                            rows = tbody.children("tr");
-
-
-                        function comparator(_a, _b) {
-                            //console.log(_a);
-                            //console.log(_b);
-                            var a = $(_a).find("td").eq(idx).text(),
-                                b = $(_b).find("td").eq(idx).text();
-                            //console.log(a + ", " + b);
-                            if (a < b)
-                                return -1;
-                            else if (a > b)
-                                return 1;
-                            return 0;
-                        }
-                        rows.sort(comparator)
-                            .detach()
-                            .appendTo(tbody);
                     };
 
                 editor.blur(function () {
@@ -156,7 +162,8 @@
 
                 table.css("cursor", "pointer")
                     .on("click", "thead > tr > th", columnClick)
-                    .on("click keypress dblclick", "tbody", showEditor)
+                    .on("click", "tbody", showContent)
+                    .on("keypress dblclick", "tbody", showEditor)
                     .keydown(function (event) {
                         var prevent = true,
                             move = movement($(event.target), event.which);
@@ -175,7 +182,6 @@
                             event.stopPropagation();
                             event.preventDefault();
                         }
-                        console.log("inside tbody");
                     });
                 
                 table.find("td").prop("tabindex", 1);

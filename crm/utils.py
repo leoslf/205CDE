@@ -24,10 +24,10 @@ def authentication(err_msg=None):
             # 2 == manager, 3 == admin
             msg = []
             results = query("staff", condition="username = '%s' AND (role+0) >= 2" % session["username"], err_msg=msg)
-            print (results)
+            debug(results)
             if results is None and err_msg is not None and isinstance(msg, list) and len(msg) > 0:
                 err_msg.append(msg[0])
-                print (msg[0])
+                debug(msg[0])
 
             if len(results) == 1:
                 # successful
@@ -38,7 +38,7 @@ def authentication(err_msg=None):
             if err_msg is not None:
                 assert (isinstance(err_msg, list))
                 err_msg.append(tb)
-                print (tb)
+                debug(tb)
 
     
     return False

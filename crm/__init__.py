@@ -16,7 +16,7 @@ app.jinja_env.globals.update(zip=zip, list=list, str=str, query=query)
 app.jinja_env.trim_blocks = True
 app.jinja_env.lstrip_blocks = True
 
-basicConfig(filename="log.log")
+basicConfig(filename="log.log", level=DEBUG)
 
 # Circular import 
 from crm import views, models

@@ -13,6 +13,7 @@ def before_request():
     g.python_version = sys.version_info[0]
     g.app_name = "CRM"
     g.authentication = authentication
+    g.OrderedDict_column = OrderedDict_column
 
 # matching route and handler
 @application.route("/", defaults={"filename": "index.html"})

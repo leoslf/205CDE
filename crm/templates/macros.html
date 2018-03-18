@@ -15,8 +15,39 @@
     {% include 'msg.html' %}
 {%- endmacro %}
 
+{% macro carousel(images) -%}
+    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+            {% for x in images %}
+                <li data-target="#carousel-example-generic" data-slide-to="{{ loop.index0 }}" class="{{ 'active' if loop.index0 else '' }}"></li>
+            {% endfor %}
+        </ol>
+        
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner" role="listbox">
+            {% for filename in images %}
+                <div class="item {{ 'active' if loop.index0 == 0 else '' }}">
+                    <img src="images/{{ filename }}" alt="">
+                    <div class="carousel-caption">
+                        ...
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <!-- Controls -->
+        <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+{%- endmacro %}
 
-{% macro modal(id, header_text, content) -%}
+{% macro modal(id, header_text) -%}
     <div id="{{ id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-label">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -25,11 +56,13 @@
                     <h4 class="modal-title">{{ header_text }}</h4>
                 </div>
                 <div class="modal-body">
-                    <p>{{ content }}</p>
+                    {% if caller %}
+                        {{ caller() }}
+                    {% endif %}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
                 </div>
             </div> <!-- /.modal-content -->
         </div> <!-- /.modal-dialog -->
@@ -63,6 +96,9 @@
     </div>
     {% set err_msg = [] %}
     {% set results = query(table, desc=True, err_msg=err_msg, **kwargs) %}
+    {% if 'results_ref' in kwargs %}
+        {% do kwargs['results_ref'].append(results) %}
+    {% endif %}
     {% if results is not none %}
         <div class="row">
             <div class="container-fluid ">
@@ -92,7 +128,12 @@
                             </tbody>
                         </table>
                     </div>
-                    {{ modal("dialog", table, "content ...") }}
+                    {% call modal("row-dialog", "Record") %}
+                        TEST
+                    {% endcall %}
+                    {% if caller %}
+                        {{ caller() }}
+                    {% endif %}
                     <input type="hidden" id="table_name" name="table_name" value="{{ table }}" />
                     <button type="submit" class="btn btn-default">Submit</button>
                     <button type="reset" class="btn btn-default" onclick="window.location.reload()">Reset</button>

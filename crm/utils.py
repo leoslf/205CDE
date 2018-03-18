@@ -43,6 +43,12 @@ def authentication(err_msg=None):
     
     return False
 
+def OrderedDict_column(od, col, nonempty_filter=False):
+    debug(od)
+    result = [x[col] for x in od if col in x and (nonempty_filter == False or nonempty_filter == True and len(x[col]) > 0)]
+    debug(result)
+    return result 
+
 def set_msg(msg_dict, page, f=render_template):
     resp = make_response(f(urlparse(str(page)).path))
     assert (isinstance(msg_dict, dict))

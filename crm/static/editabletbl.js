@@ -86,7 +86,7 @@ $.fn.clicks = function (click_cb, dblclick_cb, timeout) {
                         console.log(current_row.text());
                         console.log($("#table_name").val());
                         console.log(current_row);
-                        $("#dialog").modal("toggle");
+                        $("#row-dialog").modal("toggle");
                     },
                     showEditor = function (select) {
                         if (table.hasClass("rw")) {

@@ -5,8 +5,12 @@
         {% include 'banner.html' %}
         {% include 'navbar.html' %}
 
-        <div class="container bg-white">
-            {% block content %}
+        <div id="content">
+            {% block content_without_container %}
+                <div class="container navbar_margin_adjust">
+                    {% block content %}
+                    {% endblock %}
+                </div>
             {% endblock %}
         </div>
     </body>

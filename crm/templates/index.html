@@ -2,8 +2,24 @@
 
 {% set title = "Home" %}
 
-{% block content %}
-    <div class="container bg-white">
-        <h1>Welcome! Index Page</h1>
-    </div>
+{% block content_without_container %}
+    <section id="intro">
+        <div class="container clearfix">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>Welcome! Index Page</h1>
+                    <h3></h3>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="welcome">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="container">
+                    <h1>Test</h1>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}

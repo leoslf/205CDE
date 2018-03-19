@@ -22,6 +22,35 @@ app.jinja_env.lstrip_blocks = True
 
 basicConfig(filename="log.log", level=DEBUG)
 
+class SMTPTLSHandler(SMTPHandler):
+    def emit(self, record):
+        """Emit Record, formatting and send it to address specified"""
+        try:
+            try:
+                from email.utils import formatdate
+            except ImportError:
+                formatdate = self.date_time
+            smtp = smtplib.SMTP(self.mailhost, self.mailport)
+            message = "\r\n".join([
+                "From: %s" % self.fromaddr,
+                "To: %s" % ",".join(self.toaddrs),
+                "Subject: %s" % self.getSubject(record),
+                "Date: %s" % formatdate(),
+                "",
+                "%s" % self.format(record)])
+            
+            if self.username:
+                smtp.ehlo()
+                smtp.starttls()
+                smtp.ehlo()
+                smtp.login(self.username, self.password)
+            smtp.sendmail(self.fromaddr, self.toaddrs, message)
+            smtp.quit()
+        except (KeyboardInterrupt, SystemExit):
+            raise
+        except:
+            self.handleError(record)
+
 SMTP_config = dict(
     mailhost = ("smtp.gmail.com", 587), 
     fromaddr = Config.admin_email, 
@@ -30,8 +59,8 @@ SMTP_config = dict(
     credentials=(Config.admin_email, Config.admin_email_pw)
 )
 
-email_handler = SMTPHandler(**SMTP_config)
-email_handler.setlevel = ERROR
+email_handler = SMTPTLSHandler(**SMTP_config)
+email_handler.setLevel(ERROR)
 getLogger().addHandler(email_handler)
 
 # Circular import 

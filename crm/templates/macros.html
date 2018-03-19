@@ -16,7 +16,7 @@
 {%- endmacro %}
 
 {% macro carousel(images) -%}
-    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+    <div id="carousel-example-generic" id="carousel" class="carousel slide" data-ride="carousel">
         <!-- Indicators -->
         <ol class="carousel-indicators">
             {% for x in images %}
@@ -28,7 +28,7 @@
         <div class="carousel-inner" role="listbox">
             {% for filename in images %}
                 <div class="item {{ 'active' if loop.index0 == 0 else '' }}">
-                    <img src="images/{{ filename }}" alt="">
+                    <img class="center-block" src="images/{{ filename }}" alt="">
                     <div class="carousel-caption">
                         ...
                     </div>

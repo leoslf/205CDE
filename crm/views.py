@@ -68,8 +68,14 @@ def logout():
     # remove cookie variable
     for x in ("username", "displayed_username"):
         session.pop(x, None)
-    return redirect(request.referrer)
+    return set_msg(dict(info="raised error"), request.referrer, redirect)
 
+@application.route("/raise_error", methods=["POST"])
+def raise_error():
+    if request.method == "POST":
+        assert ("msg" in request.form)
+        error(request.form["msg"])
+        return set_msg(dict(info="fired errmsg: %s" % request.form["msg"]), request.referrer, redirect)
 
 @application.route("/update_table", methods=["POST", "GET"])
 def update_table():
@@ -101,8 +107,8 @@ def update_table():
                         updated_rows += rc
 
                 elif name.startswith("newrow-"):
-                    msg["info"] += "insert: %s, %s" % (name, request.form[name]) + "<br />"
                     delta_dict = json.loads(request.form[name])
+                    msg["info"] += "insert: %s, %s" % (str(name), str(delta_dict)) + "<br />"
                     rc = insert(table_name,
                                 values = delta_dict,
                                 errmsg = err_msg)

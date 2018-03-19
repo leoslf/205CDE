@@ -13,12 +13,6 @@
         height: 100%;
     }
 }
-
-.main {
-    width: 100%; 
-}
-
-
 .sidebar-brand {
     display: block;
     text-align: center;
@@ -29,6 +23,16 @@
     height: 1px;
 }
 
+.main {
+    width: 100%; 
+}
+
+/* override navbar-brand */
+.navbar-brand {
+    padding: 10px 10px;
+}
+
+
 .order:after {
     /* Downward Triangle ~ Caret */
     content: "\25be";
@@ -38,9 +42,14 @@ table {
     border-spacing: 10px;
 }
 
+@font-face {
+    font-family: "Fjord One";
+    src: url("fonts/FjordOne-Regular.ttf");
+}
 
 body {
     padding-top: 70px;
+    font-family: 'Fjord One', serif !important;
 }
 
 

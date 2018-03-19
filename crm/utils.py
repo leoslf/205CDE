@@ -2,6 +2,8 @@ import sys
 import os
 import traceback
 import json
+from smtpd import *
+import asyncore
 try:
     from urlparse import urlparse
 except ImportError:
@@ -59,3 +61,16 @@ def set_msg(msg_dict, page, f=render_template):
 def errmsg(msg, page="error.html", f=render_template):
     return set_msg({'err' : msg}, page, f)
 
+class SMTPDaemon(SMTPServer):
+    def __init__(self, localaddr, remoteaddr=(None, None)):
+        SMTPServer.__init__(self, localaddr, remoteaddr)
+    def process_message(self, peer, mailfrom, rcpttos, data):
+        info("New Email Recieved: %s" % data)
+
+    @staticmethod
+    def run(host="localhost", port=25):
+        daemon = SMTPDaemon((host, port))
+        try:
+            asyncore.loop(timeout=2)
+        except KeyboardInterrupt:
+            daemon.close()

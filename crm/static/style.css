@@ -65,7 +65,8 @@ html, body {
 
 section {
     font-family: "Yanone Kaffeesatz";
-    padding-top: 70px;
+    padding-top: 90px;
+    padding-bottom: 90px;
     letter-spacing: 2px;
 }
 

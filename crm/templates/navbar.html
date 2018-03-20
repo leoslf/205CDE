@@ -31,7 +31,9 @@
                                 <span class="glyphicon glyphicon-user"></span> {{ str(session['displayed_username']) }} <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
+                                <!--
                                 <li><a href="/settings">Settings</a></li>
+                                -->
                                 {% set msg = [] %}
                                 {% if g.authentication(err_msg=msg) %}
                                     <li><a href="/admin">Admin</a></li>
